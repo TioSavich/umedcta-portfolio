@@ -155,7 +155,19 @@
     }
 
     em { font-style: italic; }
+
+    /* --- Developmental breadcrumbs --- */
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-style: italic;
+      margin: 0.75rem 0 0;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--border);
+      line-height: 1.5;
+    }
   </style>
+  <link rel="stylesheet" href="shared/glossary.css">
 </head>
 <body>
 
@@ -172,10 +184,21 @@
       <p>The modeling is honest about what it leaves out. A Prolog formalization of a child's arithmetic strategy is not a theory of mathematical cognition; a Zeeman catastrophe machine running in a browser is not a metaphysics of embodied compression. What these tools do: make it possible to notice where the formalization stops — and what that stopping tells you about what the formalism was actually doing.</p>
     </div>
 
-    <p>The tools accompany a manuscript rooted in Robert Brandom's analytic pragmatism, Hegel's dialectics of determinate negation, and Phil Carspecken's critical ethnography. The Prolog and Python formalization work is not included here; that material is research in progress, and claiming it "works" in any philosophically significant sense would be premature.</p>
+    <p>The tools accompany a manuscript rooted in Robert Brandom's <span class="g" data-term="analytic-pragmatism">analytic pragmatism</span>, Hegel's dialectics of <span class="g" data-term="determinate-negation">determinate negation</span>, and Phil Carspecken's <span class="g" data-term="critical-ethnography">critical ethnography</span>. The Prolog and Python formalization work is not included here; that material is research in progress, and claiming it "works" in any philosophically significant sense would be premature.</p>
+
+    <p>The tools below are arranged roughly in developmental order — from embodied judgment, through counting and number, to the geometry of difference and the structure of classroom discourse. The paradoxes encountered along the way are the "built to break" moments.</p>
   </section>
 
-  <h2>Children's Mathematical Reasoning</h2>
+  <h2>Embodiment and Memory</h2>
+  <div class="tool-list">
+    <a class="tool-card" href="more-zeeman/index_unified.html">
+      <div class="tool-name">The More Machine</div>
+      <div class="tool-desc">A model of the Zeeman catastrophe machine — a physical device with two elastic bands attached to a rotating disc, where the control point can be dragged into a region where the disc snaps discontinuously between two stable positions. In the manuscript's appendix, the machine serves as a model for embodied compression and relaxation: the moment before a snap, the system is in a superimposed state; after, it has resolved — but the resolution carries information about the path. The "sound of time" visualizer registers angular velocity as acoustic displacement, so you can hear the snap. The matrix automaton in the corner grows by Cantorian diagonalization each time a catastrophe occurs.</div>
+    </a>
+  </div>
+  <p class="breadcrumb">The snap produces a countable moment — a judgment the system records. From here, counting.</p>
+
+  <h2>Counting and Number</h2>
   <div class="tool-list">
     <a class="tool-card" href="calculator/index.html">
       <div class="tool-name">The Hermeneutic Calculator</div>
@@ -183,47 +206,46 @@
     </a>
     <a class="tool-card" href="calculator/AceofBases/index.html">
       <div class="tool-name">Ace of Bases</div>
-      <div class="tool-desc">A base system explorer. Users experiment with number representation in bases other than ten. The goal is not to teach base conversion but to make the contingency of base-ten notation available for examination — a starting point for understanding what a number system commits you to.</div>
+      <div class="tool-desc">A base system explorer. Counting commits you to a base system, but the choice of base is entirely normative — it could have been otherwise. This tool makes that contingency available for examination. Generalizing across bases encounters the paradox of the one and the many: the same quantity, held differently.</div>
     </a>
   </div>
+  <p class="breadcrumb">Counting and shapes share a problem: how do things differ, and what follows from their difference?</p>
 
-  <h2>AI in Education</h2>
-  <div class="tool-list">
-    <a class="tool-card" href="ai-framework/framework.html">
-      <div class="tool-name">A Framework for AI in Education</div>
-      <div class="tool-desc">Three modes of AI use in classroom settings — distinguished by whether AI takes a role in the conversation or produces content for students to engage with. The framework draws on Habermas's distinction between communicative and strategic action. The framework describes a teacher's options, not a theory of learning.</div>
-    </a>
-    <a class="tool-card" href="ai-framework/on_friction_and_ai.html">
-      <div class="tool-name">On Friction and AI</div>
-      <div class="tool-desc">An essay on what productive difficulty does in learning, and what AI removes when it removes difficulty. Built through conversation with AI; the ideas are the author's, the implementation is not. The essay describes how this was made and what that process can and cannot mean for questions of authorship.</div>
-    </a>
-    <a class="tool-card" href="ai-framework/classroom_web.html">
-      <div class="tool-name">The Classroom Web</div>
-      <div class="tool-desc">A network visualization of how mathematical ideas connect across classroom discussions. Students and their contributions appear as nodes; the connections track inferential dependencies rather than conversational sequence.</div>
-    </a>
-  </div>
-
-  <h2>Types of Difference</h2>
+  <h2>Difference and Identity</h2>
   <div class="tool-list">
     <a class="tool-card" href="ten-differences/difference_v2.html">
       <div class="tool-name">Ten Types of Difference</div>
-      <div class="tool-desc">An interactive guide to Brandom's reading of Hegel's <em>Perception</em> chapter. Ten logical structures of difference, rendered through geometry and equity examples. The geometry is not a metaphor for the logic — it instantiates the same inferential relations. The equity framing came from a class on pluralism where geometric examples worked where political ones did not.</div>
+      <div class="tool-desc">An interactive guide to Brandom's reading of Hegel's <em>Perception</em> chapter. Ten logical structures of difference, rendered through geometry and equity examples. The geometry is not a metaphor for the logic — it instantiates the same <span class="g" data-term="material-inference">inferential relations</span>. The equity framing came from a class on pluralism where geometric examples worked where political ones did not.</div>
     </a>
     <a class="tool-card" href="quadrilateral-sub/inferential_strength.html">
       <div class="tool-name">Quadrilateral Substitution</div>
-      <div class="tool-desc">A worked demonstration of Brandom's substitution inference in Chapter 4 of <em>Articulating Reasons</em>, using quadrilaterals. Substitution inference — the move from "this is a square" to "this is a rectangle" — turns out to require inferential commitment, not just conceptual inclusion. The geometry makes the commitment structure available to examination.</div>
+      <div class="tool-desc">A worked demonstration of Brandom's <span class="g" data-term="substitution-inference">substitution inference</span> in Chapter 4 of <em>Articulating Reasons</em>, using quadrilaterals. Substitution inference — the move from "this is a square" to "this is a rectangle" — turns out to require inferential commitment, not just conceptual inclusion. The geometry makes the commitment structure available to examination.</div>
     </a>
+  </div>
+  <p class="breadcrumb">Relaxing exclusive differences lets shapes be inside each other — <span class="g" data-term="sublation">sublated</span>. This opens the space for connecting what students know.</p>
+
+  <h2>The Classroom</h2>
+  <div class="tool-list">
     <a class="tool-card" href="five-practices/five_practices.html">
       <div class="tool-name">Five Practices for Productive Math Discussions</div>
       <div class="tool-desc">An interactive demonstration of the Smith &amp; Stein pedagogical framework — anticipating, monitoring, selecting, sequencing, and connecting student thinking. The tool is designed to help teacher candidates recognize the framework's inferential logic, not to train them in it.</div>
     </a>
+    <a class="tool-card" href="ai-framework/classroom_web.html">
+      <div class="tool-name">The Classroom Web</div>
+      <div class="tool-desc">A network visualization of how mathematical ideas connect across classroom discussions. Students and their contributions appear as nodes; the connections track inferential dependencies rather than conversational sequence. With 24 students, there are 276 implicit connections on a single topic — too many for any teacher to hold.</div>
+    </a>
   </div>
+  <p class="breadcrumb">Making those connections explicit at scale is the problem AI enters. The question is what kind of action it performs.</p>
 
-  <h2>The Zeeman Catastrophe Machine</h2>
+  <h2>AI and Education</h2>
   <div class="tool-list">
-    <a class="tool-card" href="more-zeeman/index_unified.html">
-      <div class="tool-name">More Zeeman</div>
-      <div class="tool-desc">A model of the Zeeman catastrophe machine — a physical device with two elastic bands attached to a rotating disc, where the control point can be dragged into a region where the disc snaps discontinuously between two stable positions. In the manuscript's appendix, the machine serves as a model for embodied compression and relaxation: the moment before a snap, the system is in a superimposed state; after, it has resolved — but the resolution carries information about the path. The "sound of time" visualizer registers angular velocity as acoustic displacement, so you can hear the snap. The matrix automaton in the corner grows by Cantorian diagonalization each time a catastrophe occurs.</div>
+    <a class="tool-card" href="ai-framework/framework.html">
+      <div class="tool-name">A Framework for AI in Education</div>
+      <div class="tool-desc">Three modes of AI use in classroom settings — distinguished by whether AI takes a role in the conversation or produces content for students to engage with. The framework draws on Habermas's distinction between <span class="g" data-term="communicative-action">communicative</span> and <span class="g" data-term="strategic-action">strategic action</span>. The framework describes a teacher's options, not a theory of learning.</div>
+    </a>
+    <a class="tool-card" href="ai-framework/on_friction_and_ai.html">
+      <div class="tool-name">On Friction and AI</div>
+      <div class="tool-desc">An essay on what productive difficulty does in learning, and what AI removes when it removes difficulty. Built through conversation with AI; the ideas are the author's, the implementation is not. The essay describes how this was made and what that process can and cannot mean for questions of authorship.</div>
     </a>
   </div>
 
@@ -232,5 +254,6 @@
     <p style="margin-top: 0.5rem;">These tools accompany <em>Understanding Mathematics as an Emancipatory Discipline: A Critical Theory Approach</em>, a manuscript under ongoing revision. The code is available at <a href="https://github.com/TioSavich/umedcta-portfolio">github.com/TioSavich/umedcta-portfolio</a>.</p>
   </footer>
 
+  <script src="shared/glossary.js"></script>
 </body>
 </html>
