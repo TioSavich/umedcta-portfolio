@@ -4,7 +4,6 @@
     <title>Subtraction Strategies: Chunking</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -469,16 +468,410 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('https://tiosavich.github.io/UMEDCTA/Calculator/SAR_SUB_CHUNKING.pdf', '_blank');
-    }
-</script>
+    
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong>&ldquo;One summer T.J. saved $400. At the end
+of the summer she spent $294 on a new bike. How much money did T.J. have
+then?&rdquo;</p></li>
+<li><p><strong>Student:</strong> &ldquo;400 takeaway 200 is 200. I just put
+the 4 on the side right now. So then 200 takeaway 90 is 110. So then 110
+takeaway 4 is 106.</p></li>
+<li><p><strong>Teacher:</strong> &ldquo;So how much money did she have
+left?&rdquo;</p></li>
+<li><p><strong>Student:</strong> &ldquo;106.&rdquo;</p></li>
+<li><p><strong>Teacher:</strong> &ldquo;Nice job.&rdquo;</p></li>
+</ul>
+<p>Here is the notation below to show what the student did:</p>
+<p><span class="math display">\[\begin{aligned}
+400 - 200 &amp;= 200\\
+200 - 90 &amp;= 110\\
+110 - 4 &amp;= 106
+\end{aligned}\]</span></p>
+
+<p>However, this is only one of three structurally different ways that
+chunking can show up in subtraction.</p>
+<ol>
+<li><p><strong>Chunking backwards (by known part)</strong> The student
+starts at the known whole and subtracts backwards by the known part.
+They arrive at the unknown part.</p></li>
+<li><p><strong>Chunking forwards</strong> The student subtracts the
+known whole from the known part.</p></li>
+<li><p><strong>Chunking backwards (to the known part)</strong> The
+student starts at the known whole and subtracts backwards until they
+reach the known part.</p></li>
+</ol>
+
+
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy</h3>
+<ul>
+<li><p>Subtract the subtrahend (known part) from the minuend (known
+whole) by breaking the subtrahend into bases and ones and subtracting in
+strategic chunks.</p></li>
+<li><p>Start from the subtrahend and add strategic chunks to reach the
+minuend, summing the chunks to find the difference.</p></li>
+<li><p>Start at the minuend and subtract strategic chunks until you
+reach the subtrahend, summing the chunks to find the
+difference.</p></li>
+</ul>
+<h3 class="unnumbered"
+id="corrected-automaton-register-machine-and-python-implementation">Corrected
+Automaton (Register Machine) and Python Implementation</h3>
+<p>We implement corrected Register Machines for all three strategies.
+Strategies B and C explicitly include iterative subroutines (based on
+RMB logic) to model the cognitive process of determining strategic
+chunks.</p>
+<pre class="python" data-language="Python"><code>import pandas as pd
+import math
+
+class SubtractionChunkingAutomaton:
+    &quot;&quot;&quot;Base class for subtraction chunking strategies.&quot;&quot;&quot;
+    def __init__(self, M, S, Base=10):
+        self.M = M # Minuend (Whole)
+        self.S = S # Subtrahend (Known Part)
+        self.Base = Base
+        self.history = []
+        self.state = &#39;q_start&#39;
+        self.Result = 0
+
+        if S &gt; M:
+            self.state = &#39;q_error&#39;
+            self._record_history(f&quot;Error: Subtrahend ({S}) &gt; Minuend ({M}).&quot;)
+
+    def _record_history(self, interpretation, **kwargs):
+        record = {&#39;State&#39;: self.state, &#39;Interpretation&#39;: interpretation}
+        record.update(kwargs)
+        self.history.append(record)
+
+    def transition(self, next_state):
+        self.state = next_state
+
+    def run(self):
+        while self.state not in [&#39;q_accept&#39;, &#39;q_error&#39;]:
+            # Dynamically call the method corresponding to the state
+            executor = getattr(self, f&quot;execute_{self.state}&quot;, self.execute_error)
+            executor()
+        return self.Result
+
+    def execute_error(self):
+        if self.state != &#39;q_error&#39;:
+            self._record_history(f&quot;Error: Entered unknown state {self.state}&quot;)
+            self.transition(&#39;q_error&#39;)
+
+    def display_history(self):
+        print(f&quot;\n--- Subtraction Chunking History ({self.M} - {self.S}) | Strategy: {self.strategy_name} ---&quot;)
+        df = pd.DataFrame(self.history)
+        if not df.empty:
+            df = df.fillna(&#39;&#39;)
+        print(df.to_markdown(index=False))
+
+# =============================================================================
+# Strategy A: Chunking Backwards (by Known Part) - Place Value Decomposition
+# =============================================================================
+
+class ChunkingAutomatonA(SubtractionChunkingAutomaton):
+    &quot;&quot;&quot;
+    Strategy A: Start at M, subtract chunks of S decomposed by place value.
+    &quot;&quot;&quot;
+    strategy_name = &quot;A (Backwards by Part)&quot;
+    
+    def __init__(self, M, S, Base=10):
+        super().__init__(M, S, Base)
+        self.CurrentValue = 0
+        self.S_Remaining = 0
+
+    def execute_q_start(self):
+        self._record_history(&quot;Start: Initialize.&quot;, CV=0, S_Rem=0)
+        self.transition(&#39;q_init&#39;)
+
+    def execute_q_init(self):
+        self.CurrentValue = self.M
+        self.S_Remaining = self.S
+        self._record_history(f&quot;Set CurrentValue={self.M}. S_Remaining={self.S}.&quot;, CV=self.CurrentValue, S_Rem=self.S_Remaining)
+        self.transition(&#39;q_identify_chunk&#39;)
+
+    def execute_q_identify_chunk(self):
+        &quot;&quot;&quot;Identify the next chunk of S by largest place value.&quot;&quot;&quot;
+        if self.S_Remaining == 0:
+            self.Result = self.CurrentValue
+            self._record_history(f&quot;S fully subtracted. Result={self.Result}.&quot;, CV=self.CurrentValue, S_Rem=0)
+            self.transition(&#39;q_accept&#39;)
+            return
+
+        # Identify the largest place value chunk remaining in S_Remaining
+        # Generalized approach using log to handle any base
+        if self.S_Remaining &gt; 0:
+            power = math.floor(math.log(self.S_Remaining, self.Base))
+            power_value = self.Base**power
+            # Calculate the chunk (e.g., the &#39;200&#39; in 294)
+            Chunk = (self.S_Remaining // power_value) * power_value
+        else:
+            Chunk = 0
+
+        self.Chunk = Chunk
+        self._record_history(f&quot;Identified chunk to subtract: {Chunk}.&quot;, CV=self.CurrentValue, S_Rem=self.S_Remaining)
+        self.transition(&#39;q_subtract_chunk&#39;)
+
+    def execute_q_subtract_chunk(self):
+        &quot;&quot;&quot;Subtract the identified chunk.&quot;&quot;&quot;
+        Chunk = self.Chunk
+        self.CurrentValue -= Chunk
+        self.S_Remaining -= Chunk
+        self._record_history(f&quot;Subtracted {Chunk}. New Value={self.CurrentValue}.&quot;, CV=self.CurrentValue, S_Rem=self.S_Remaining)
+        self.transition(&#39;q_identify_chunk&#39;) # Loop back
+
+# =============================================================================
+# Strategy B: Chunking Forwards (Missing Addend) - RMB Logic
+# =============================================================================
+
+class ChunkingAutomatonB(SubtractionChunkingAutomaton):
+    &quot;&quot;&quot;
+    Strategy B: Start at S, add up to M. Result is the distance traveled.
+    Uses strategic addition (RMB logic) modeled iteratively.
+    &quot;&quot;&quot;
+    strategy_name = &quot;B (Forwards from Part)&quot;
+
+    def __init__(self, M, S, Base=10):
+        super().__init__(M, S, Base)
+        self.CurrentValue = 0
+        self.Distance = 0
+        # Internal registers for iterative K calculation (RMB subroutine)
+        self.K = 0
+        self.TargetBase = 0
+        self.internal_temp = 0
+
+    def transition(self, next_state):
+        # Reset K/RMB registers when exiting the RMB loop
+        if next_state == &#39;q_check_status&#39;:
+             self.K = 0
+             self.TargetBase = 0
+             self.internal_temp = 0
+        self.state = next_state
+
+    def execute_q_start(self):
+        self._record_history(&quot;Start: Initialize.&quot;, CV=0, Dist=0)
+        self.transition(&#39;q_init&#39;)
+
+    def execute_q_init(self):
+        self.CurrentValue = self.S
+        self.Distance = 0
+        self._record_history(f&quot;Start at S ({self.S}). Target is M ({self.M}).&quot;, CV=self.CurrentValue, Dist=self.Distance)
+        self.transition(&#39;q_check_status&#39;)
+
+    def execute_q_check_status(self):
+        if self.CurrentValue &lt; self.M:
+            self.transition(&#39;q_init_K&#39;)
+        else:
+            self.Result = self.Distance
+            self._record_history(f&quot;Target reached. Result (Distance)={self.Result}.&quot;, CV=self.CurrentValue, Dist=self.Distance)
+            self.transition(&#39;q_accept&#39;)
+
+    # RMB Subroutine (Iterative Count Up To Base)
+    def execute_q_init_K(self):
+        &quot;&quot;&quot;Initialize iterative calculation of K to reach the next strategic base.&quot;&quot;&quot;
+        self.K = 0
+        self.internal_temp = self.CurrentValue
+
+        # Determine the next target base (Prioritizing lower powers of the base)
+        # Example in Base 10: Prioritize 10s, then 100s, etc.
+        self.TargetBase = self.CurrentValue
+        power = 1
+        while True:
+            BasePower = self.Base**power
+            if self.CurrentValue % BasePower != 0:
+                self.TargetBase = ((self.CurrentValue // BasePower) + 1) * BasePower
+                break
+            # If we exceed the target M, we stop prioritizing boundaries.
+            if BasePower &gt; self.M:
+                break
+            power += 1
+
+        self._record_history(f&quot;Calculating K: Counting from {self.CurrentValue} to {self.TargetBase}.&quot;, CV=self.CurrentValue, Dist=self.Distance, K=0)
+        self.transition(&#39;q_loop_K&#39;)
+
+    def execute_q_loop_K(self):
+        if self.internal_temp &lt; self.TargetBase:
+            # Iterative step (Counting Up)
+            self.internal_temp += 1
+            self.K += 1
+        else:
+            self.transition(&#39;q_add_chunk&#39;)
+
+    def execute_q_add_chunk(self):
+        &quot;&quot;&quot;Determine the chunk to add based on K or remaining distance.&quot;&quot;&quot;
+        Remaining = self.M - self.CurrentValue
+
+        # Strategy 1: Use K if it&#39;s useful (K&gt;0) and doesn&#39;t overshoot
+        if self.K &gt; 0 and self.K &lt;= Remaining:
+            Chunk = self.K
+            Interpretation = f&quot;Add strategic chunk (+{Chunk}) to reach base.&quot;
+        # Strategy 2: If K is 0 (already at a base), add largest multiple of power of base possible.
+        else:
+            if Remaining &gt; 0:
+                power = math.floor(math.log(Remaining, self.Base))
+                power_value = self.Base**power
+                Chunk = (Remaining // power_value) * power_value
+                Chunk = Chunk if Chunk &gt; 0 else Remaining
+                Interpretation = f&quot;Add large/remaining chunk (+{Chunk}).&quot;
+            else:
+                self.transition(&#39;q_error&#39;); return
+
+        self.CurrentValue += Chunk
+        self.Distance += Chunk
+        self._record_history(Interpretation + f&quot; New Value={self.CurrentValue}.&quot;, CV=self.CurrentValue, Dist=self.Distance, K=self.K)
+        self.transition(&#39;q_check_status&#39;)
+
+# =============================================================================
+# Strategy C: Chunking Backwards (to Known Part) - Inverse RMB Logic
+# =============================================================================
+
+class ChunkingAutomatonC(SubtractionChunkingAutomaton):
+    &quot;&quot;&quot;
+    Strategy C: Start at M, subtract down to S. Result is the distance traveled.
+    Uses strategic subtraction (Reverse RMB logic) modeled iteratively.
+    &quot;&quot;&quot;
+    strategy_name = &quot;C (Backwards to Part)&quot;
+
+    # Initialization and structure mirror Strategy B, but direction is reversed.
+    def __init__(self, M, S, Base=10):
+        super().__init__(M, S, Base)
+        self.CurrentValue = 0
+        self.Distance = 0
+        self.K = 0
+        self.TargetBase = 0
+        self.internal_temp = 0
+
+    def transition(self, next_state):
+        if next_state == &#39;q_check_status&#39;:
+             self.K = 0
+             self.TargetBase = 0
+             self.internal_temp = 0
+        self.state = next_state
+
+    def execute_q_start(self):
+        self._record_history(&quot;Start: Initialize.&quot;, CV=0, Dist=0)
+        self.transition(&#39;q_init&#39;)
+
+    def execute_q_init(self):
+        self.CurrentValue = self.M # Start at M
+        self.Distance = 0
+        self._record_history(f&quot;Start at M ({self.M}). Target is S ({self.S}).&quot;, CV=self.CurrentValue, Dist=self.Distance)
+        self.transition(&#39;q_check_status&#39;)
+
+    def execute_q_check_status(self):
+        if self.CurrentValue &gt; self.S: # Loop until S is reached
+            self.transition(&#39;q_init_K&#39;)
+        else:
+            self.Result = self.Distance
+            self._record_history(f&quot;Target reached. Result (Distance)={self.Result}.&quot;, CV=self.CurrentValue, Dist=self.Distance)
+            self.transition(&#39;q_accept&#39;)
+
+    # Reverse RMB Subroutine (Iterative Count Back To Base)
+    def execute_q_init_K(self):
+        &quot;&quot;&quot;Initialize iterative calculation of K to reach the previous base.&quot;&quot;&quot;
+        self.K = 0
+        self.internal_temp = self.CurrentValue
+
+        # Determine the previous target base
+        self.TargetBase = self.CurrentValue
+        power = 1
+        while True:
+            BasePower = self.Base**power
+            if self.CurrentValue % BasePower != 0:
+                self.TargetBase = (self.CurrentValue // BasePower) * BasePower
+                break
+            # If we go below the target S, we stop prioritizing boundaries.
+            if BasePower &gt; self.M:
+                 break
+            power += 1
+
+        self._record_history(f&quot;Calculating K: Counting back from {self.CurrentValue} to {self.TargetBase}.&quot;, CV=self.CurrentValue, Dist=self.Distance, K=0)
+        self.transition(&#39;q_loop_K&#39;)
+
+    def execute_q_loop_K(self):
+        if self.internal_temp &gt; self.TargetBase:
+            # Iterative step (Counting Back)
+            self.internal_temp -= 1
+            self.K += 1
+        else:
+            self.transition(&#39;q_sub_chunk&#39;)
+
+    def execute_q_sub_chunk(self):
+        &quot;&quot;&quot;Determine the chunk to subtract based on K or remaining distance.&quot;&quot;&quot;
+        Remaining = self.CurrentValue - self.S
+
+        # Strategy 1: Use K if it&#39;s useful (K&gt;0) and doesn&#39;t overshoot
+        if self.K &gt; 0 and self.K &lt;= Remaining:
+            Chunk = self.K
+            Interpretation = f&quot;Subtract strategic chunk (-{Chunk}) to reach base.&quot;
+        # Strategy 2: If K is 0, subtract largest multiple of power of base possible.
+        else:
+            if Remaining &gt; 0:
+                power = math.floor(math.log(Remaining, self.Base))
+                power_value = self.Base**power
+                Chunk = (Remaining // power_value) * power_value
+                Chunk = Chunk if Chunk &gt; 0 else Remaining
+                Interpretation = f&quot;Subtract large/remaining chunk (-{Chunk}).&quot;
+            else:
+                self.transition(&#39;q_error&#39;); return
+
+        self.CurrentValue -= Chunk
+        self.Distance += Chunk
+        self._record_history(Interpretation + f&quot; New Value={self.CurrentValue}.&quot;, CV=self.CurrentValue, Dist=self.Distance, K=self.K)
+        self.transition(&#39;q_check_status&#39;)
+
+# =============================================================================
+# Testing and Efficiency Analysis
+# =============================================================================
+
+# Test Case 1: 400 - 294 (As in the PDF)
+M_test = 400
+S_test = 294
+print(f&quot;=== Test Case: {M_test} - {S_test} ===&quot;)
+
+# Test Strategy A
+auto_A = ChunkingAutomatonA(M=M_test, S=S_test)
+auto_A.run()
+auto_A.display_history()
+
+# Test Strategy B
+auto_B = ChunkingAutomatonB(M=M_test, S=S_test)
+auto_B.run()
+auto_B.display_history()
+
+# Test Strategy C
+auto_C = ChunkingAutomatonC(M=M_test, S=S_test)
+auto_C.run()
+auto_C.display_history()
+
+# Test Case 2: 83 - 17 (Efficiency Comparison)
+M_test_2 = 83
+S_test_2 = 17
+print(f&quot;\n=== Efficiency Comparison: {M_test_2} - {S_test_2} ===&quot;)
+
+auto_A_2 = ChunkingAutomatonA(M_test_2, S_test_2)
+auto_A_2.run()
+auto_A_2.display_history()
+
+auto_B_2 = ChunkingAutomatonB(M_test_2, S_test_2)
+auto_B_2.run()
+auto_B_2.display_history()
+
+auto_C_2 = ChunkingAutomatonC(M_test_2, S_test_2)
+auto_C_2.run()
+auto_C_2.display_history()</code></pre>
+
+</div>
+</details>
 </body>
 </html>

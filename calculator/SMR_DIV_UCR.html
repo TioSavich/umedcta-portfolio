@@ -4,7 +4,6 @@
     <title>Division: Using Commutative Reasoning (Dealing by Rounds)</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -229,15 +228,236 @@
     </script>
 
 </div> <!-- End Container -->
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SMR_DIV_UCR.pdf', '_blank');
-    }
-</script>
+    
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>.</p>
+<p>This is a strategy for transforming the context of a sharing division
+problem (where the number of items in each group is unknown) into one
+where measurement division strategies can be used. Measurement division
+strategies are generally easier to use because students can count
+something.</p>
+<p><span class="math inline">\(\fbox{Number of groups} \times
+\fbox{Unknown Number of items in each group}  = \fbox{Total number of
+items}\)</span></p>
+<p>The idea of <strong>Using Commutative Reasoning</strong> is to
+reframe <span class="math inline">\(N\)</span> &mdash;- the number of groups
+-&mdash; as the act of placing one item into each group simultaneously. So,
+when you count one <span class="math inline">\(N\)</span>, you&rsquo;re
+putting one item into every group; counting three <span
+class="math inline">\(N\)</span>s means each group receives three items.
+This new interpretation of <span class="math inline">\(N\)</span>
+enables us to apply measurement division strategies, since our goal
+becomes finding how many times <span class="math inline">\(N\)</span>
+fits into the total number of items. This method is incredibly
+useful&mdash;but first, we need to clarify this shift in how we view <span
+class="math inline">\(N\)</span>! You might create a chart that
+illustrates distributing items one round at a time across the groups as
+you count by <span class="math inline">\(N\)</span>. When you&rsquo;re
+learning this strategy, using such visual representations can be very
+beneficial. The problem remains a sharing division problem, but we can
+now effectively apply measurement division strategies to solve it.</p>
+<p>Example: There are 56 cupcakes and 8 boxes. If we are going to put an
+equal number of cupcakes in each box, how many will go in each box?</p>
+<p>The original meaning of 8 in the problem is # of boxes, or # of
+groups. The meaning Victoria gave to 8 when she wrote down eight 8s (see
+above) was that 8 meant the # of items in a group. Neither of these
+meanings for 8 would allow her to count by repeatedly by 8 until she
+reaches 56, and then to know she has solved the problem. In other words,
+neither of these meanings for 8 will allow her to count seven 8s as a
+meaningful solution to the problem. WHY?</p>
+
+<h2 class="unnumbered" id="using-commutative-reasoning">Using
+Commutative Reasoning</h2>
+<h3 class="unnumbered" id="strategy-overview">Strategy Overview</h3>
+<p><strong>Using Commutative Reasoning</strong> leverages the
+commutative property of multiplication to facilitate division. By
+repackaging the number of groups and the number of items in each group,
+this strategy simplifies the division process and aligns it with
+multiplication reasoning.</p>
+<h3 class="unnumbered" id="automaton-as-a-7-tuple">Automaton as a
+7-Tuple</h3>
+<p><span class="math display">\[M =
+\bigl(Q,\, \Sigma,\, \Gamma,\, \delta,\, q_{0},\, \#,\,
+F\bigr),\]</span> where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{\,q_{0},\; q_{\text{read}},\;
+q_{\text{calculate}},\; q_{\text{output}},\;
+q_{\text{accept}}\}\)</span>.</p></li>
+<li><p><span class="math inline">\(\Sigma = \{G, E\}\)</span> is the
+input alphabet (<span class="math inline">\(G\)</span> = group
+information, <span class="math inline">\(E\)</span> = total
+items).</p></li>
+<li><p><span class="math inline">\(\Gamma = \{\#,\, G,\, E,\,
+Q\}\)</span> is the stack alphabet, with <span
+class="math inline">\(\#\)</span> the bottom marker.</p></li>
+<li><p><span class="math inline">\(q_{0}\)</span> is the start
+state;</p></li>
+<li><p><span class="math inline">\(\#\)</span> is the initial stack
+symbol.</p></li>
+<li><p><span class="math inline">\(F = \{\,q_{\text{accept}}\}\)</span>
+is the set of accepting states.</p></li>
+</ul>
+<h3 class="unnumbered" id="state-transition-table-corrected">State
+Transition Table (Corrected)</h3>
+<div class="center">
+<table>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>Current</strong></td>
+<td style="text-align: center;"><strong>Input</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: center;"><strong>Next</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: left;"><strong>Action /</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Symbol</strong></td>
+<td style="text-align: center;"><strong>Top</strong></td>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Operation</strong></td>
+<td style="text-align: left;"><strong>Interpretation</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{0}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">(empty)</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{read}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: left;">Initialize stack with <span
+class="math inline">\(\#\)</span>.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{read}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(G\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{read}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(G\)</span></td>
+<td style="text-align: left;">Read group info.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{read}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(E\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(G\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{calculate}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(E\)</span></td>
+<td style="text-align: left;">Read total elements.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{calculate}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(E\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;">Pop <span
+class="math inline">\(E\)</span>, Pop <span
+class="math inline">\(G\)</span>, Push <span
+class="math inline">\(Q=E/G\)</span></td>
+<td style="text-align: left;">Perform division <span
+class="math inline">\(E \div G\)</span>.</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(Q\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{accept}}\)</span></td>
+<td style="text-align: center;">Output <span
+class="math inline">\(Q\)</span></td>
+<td style="text-align: left;">Show result (quotient).</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{accept}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{accept}}\)</span></td>
+<td style="text-align: center;">No change</td>
+<td style="text-align: left;">Accept.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 class="unnumbered" id="automaton-behavior-step-by-step">Automaton
+Behavior (Step-by-Step)</h3>
+<ol>
+<li><p><strong>Initialization:</strong> In state <span
+class="math inline">\(q_{0}\)</span>, push the bottom‐of‐stack marker
+<span class="math inline">\(\#\)</span>, then move to <span
+class="math inline">\(q_{\text{read}}\)</span>.</p></li>
+<li><p><strong>Reading the Inputs:</strong></p>
+<ul>
+<li><p>Reading <span class="math inline">\(G\)</span> (e.g. 8): push
+<span class="math inline">\(G\)</span> onto the stack.</p></li>
+<li><p>Reading <span class="math inline">\(E\)</span> (e.g. 56): push
+<span class="math inline">\(E\)</span> onto the stack, then move to
+<span class="math inline">\(q_{\text{calculate}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Calculation:</strong> In <span
+class="math inline">\(q_{\text{calculate}}\)</span>, pop both <span
+class="math inline">\(E\)</span> and <span
+class="math inline">\(G\)</span>, compute the quotient <span
+class="math inline">\(Q = \tfrac{E}{G}\)</span>, and push <span
+class="math inline">\(Q\)</span>.</p></li>
+<li><p><strong>Output:</strong> Transition to <span
+class="math inline">\(q_{\text{output}}\)</span>, output <span
+class="math inline">\(Q\)</span>, then move to <span
+class="math inline">\(q_{\text{accept}}\)</span> to finish.</p></li>
+</ol>
+<h3 class="unnumbered" id="corrected-example-execution">Corrected
+Example Execution</h3>
+<p><span class="math display">\[\text{Problem: Divide } 56 \text{ items
+into } 8 \text{ groups.}\]</span></p>
+<ol>
+<li><p><strong>Inputs Read:</strong> <span class="math display">\[G =
+8,\quad E = 56.\]</span></p></li>
+<li><p><strong>Stored on Stack:</strong> <span
+class="math inline">\(\#\)</span> at the bottom, then <span
+class="math inline">\(G\)</span>, then <span
+class="math inline">\(E\)</span>.</p></li>
+<li><p><strong>Calculation Step:</strong> <span class="math display">\[Q
+= \frac{E}{G} = \frac{56}{8} = 7.\]</span></p></li>
+<li><p><strong>Output:</strong> The automaton pushes <span
+class="math inline">\(Q=7\)</span> and transitions to <span
+class="math inline">\(q_{\text{output}}\)</span>.</p></li>
+</ol>
+<p>No contradictory &ldquo;<span class="math inline">\(\tfrac{8}{56}\)</span>&rdquo;
+arises here, because we never literally swap the roles of <span
+class="math inline">\(G\)</span> and <span
+class="math inline">\(E\)</span>. Instead, the &ldquo;commutative&rdquo; viewpoint
+is *conceptual*: we regard &ldquo;8 groups&rdquo; as &ldquo;counting by eights&rdquo; out of 56,
+which is the usual measurement‐division approach.</p>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+
+</div>
+</details>
 </body>
 </html>

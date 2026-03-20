@@ -4,7 +4,6 @@
     <title>Multiplication: Coordinating Two Counts by Ones (C2C)</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -144,16 +143,260 @@
 
     </script>
 
-        <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-    <script>
-        function openPdfViewer() {
-            // Opens the PDF documentation for the strategy.
-            window.open('./SMR_MULT_C2C.pdf', '_blank');
-        }
-    </script>
+        
 
 </div>
 
+
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span></p>
+<ul>
+<li><p><strong>Teacher:</strong> Jason has three bags of cookies. There
+are six cookies in each bag. How many cookies does Jason have
+altogether?</p></li>
+<li><p><strong>Alex:</strong> There are three bags, right? Six are in
+each bag. 1, 2, 3, 4, 5, 6. 1, 2, 3, 4, 5, 6. 1, 2, 3, 4, 5, 6. 1, 2, 3,
+4, 5, 6, will go in this bag. 1, 2, 3, 4, 5, 6. Six will go into this
+bag. And 1, 2, 3, 4, 5, 6, will go into this bag. So 1, 2, 3, 4, 5, 6,
+7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18. Eighteen cookies are in
+each bag</p></li>
+<li><p><strong>Teacher:</strong> Nice, thank you. Put those
+aside.</p></li>
+</ul>
+<p>Alex started by arranging three unifix cubes. Soon, he realized that
+he needed to count cookies. He initially counted in groups of six cubes,
+even exceeding three complete groups. Recognizing this approach was
+inefficient, he began again&mdash;this time, he placed one cube to represent a
+bag and then added six cubes to stand for the cookies that would fill
+that bag. He repeated this process three times. Finally, by counting all
+the cubes (each standing in for a cookie), he determined there were 18
+cookies in total.</p>
+<p>In general, count incrementally by ones, but keep track of how many
+groups you are counting to coordinate the two distinct types of units
+involved.</p>
+<h2 class="unnumbered"
+id="coordinating-two-counts-by-ones-c2c">Coordinating Two Counts by Ones
+(C2C)</h2>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<ul>
+<li><p><strong>Objective:</strong> Count the total number of items by
+counting each item one by one, while keeping track of both the number of
+groups and the number of items in each group.</p></li>
+<li><p><strong>Method:</strong> For each group, count the items in that
+group by ones, and repeat this for each group, incrementing the total
+count.</p></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type:</h3>
+<p><strong>Finite State Automaton (FSA)</strong> with counters.</p>
+<h3 class="unnumbered" id="formal-description-of-the-automaton">Formal
+Description of the Automaton</h3>
+<p>We define the automaton as the tuple <span class="math display">\[M =
+(Q,\, \Sigma,\, \delta,\, q_{0/accept},\, F,\, V),\]</span> where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\,
+q_{\text{count\_items}},\, q_{\text{next\_group}}\}\)</span> is the set
+of states.</p></li>
+<li><p><span class="math inline">\(\Sigma\)</span> is the input alphabet
+(used, for example, to read the initial values for the
+problem).</p></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is the start
+state, which is also the accept state.</p></li>
+<li><p><span class="math inline">\(F = \{q_{0/accept}\}\)</span> is the
+set of accepting states.</p></li>
+<li><p><span class="math inline">\(V = \{\text{GroupCounter (G)},\,
+\text{ItemCounter (I)},\, \text{TotalCounter (T)},\, \text{GroupSize
+(S)},\, \text{TotalGroups (N)}\}\)</span> is the set of
+variables.</p></li>
+</ul>
+<h4 id="key-transitions">Key Transitions:</h4>
+<ol>
+<li><p><strong>Initialization:</strong> From <span
+class="math inline">\(q_{0/accept}\)</span>, on reading the input (e.g.,
+the values of <span class="math inline">\(S\)</span> and <span
+class="math inline">\(N\)</span>), set <span
+class="math inline">\(G=0\)</span>, <span
+class="math inline">\(I=0\)</span>, and <span
+class="math inline">\(T=0\)</span>, then move to <span
+class="math inline">\(q_{\text{count\_items}}\)</span>.</p></li>
+<li><p><strong>Counting Items:</strong> In <span
+class="math inline">\(q_{\text{count\_items}}\)</span>, for each item in
+the current group, increment <span class="math inline">\(I\)</span> and
+<span class="math inline">\(T\)</span> (looping until <span
+class="math inline">\(I=S\)</span>).</p></li>
+<li><p><strong>Moving to Next Group:</strong> When <span
+class="math inline">\(I=S\)</span> (the current group is complete),
+transition to <span
+class="math inline">\(q_{\text{next\_group}}\)</span> where <span
+class="math inline">\(G\)</span> is incremented and <span
+class="math inline">\(I\)</span> is reset to 0.</p></li>
+<li><p><strong>Completion:</strong> In <span
+class="math inline">\(q_{\text{next\_group}}\)</span>, if <span
+class="math inline">\(G = N\)</span> (all groups have been counted),
+transition back to <span class="math inline">\(q_{0/accept}\)</span> to
+output the total count <span class="math inline">\(T\)</span>;
+otherwise, return to <span
+class="math inline">\(q_{\text{count\_items}}\)</span> for the next
+group.</p></li>
+</ol>
+<h3 class="unnumbered" id="automaton-diagram-for-c2c">Automaton Diagram
+for C2C</h3>
+<figure>
+
+<figcaption>FSA with counters to coordinate item and group counting by
+ones.</figcaption>
+</figure>
+<h2 class="unnumbered"
+id="extending-to-a-two-stack-automaton-2-pda">Extending to a Two-Stack
+Automaton (2-PDA)</h2>
+<p>While the above FSA captures the essence of coordinating two types of
+counts (items and groups), it does not explicitly illustrate the use of
+a stack. If one requires <em>unbounded</em> counting or more advanced
+structure (e.g., repeated addition for multiplication in a more formal
+sense), a single-stack PDA can be designed. However, to <strong>compose
+two distinct PDAs</strong>&mdash;one for the item count and one for the group
+count&mdash;and retain each one&rsquo;s push/pop operations, we can move to a
+<strong>two-stack pushdown automaton (2-PDA)</strong>. This sort of
+machine:</p>
+<ul>
+<li><p>Uses two independent stacks, Stack<span
+class="math inline">\(_1\)</span> and Stack<span
+class="math inline">\(_2\)</span>, each manipulated by transitions in
+its own sub-automaton.</p></li>
+<li><p>Has states that combine the &ldquo;local states&rdquo; of the separate PDAs.
+A state in the 2-PDA is effectively a pair <span
+class="math inline">\((q_1, q_2)\)</span>, where <span
+class="math inline">\(q_1\)</span> is from the item-counting PDA and
+<span class="math inline">\(q_2\)</span> is from the group-counting
+PDA.</p></li>
+<li><p>Pushes and pops symbols from either (or both) stacks, depending
+on which sub-automaton&rsquo;s transition is activated.</p></li>
+</ul>
+<h3 class="unnumbered" id="formal-2-pda-composition">Formal 2-PDA
+Composition</h3>
+<p>Let: <span class="math display">\[P_1 = (Q_1,\ \Sigma,\ \Gamma_1,\
+\delta_1,\ q_{1,0},\ F_1)
+\quad\text{and}\quad
+P_2 = (Q_2,\ \Sigma,\ \Gamma_2,\ \delta_2,\ q_{2,0},\ F_2)\]</span> be
+two PDAs (each with its own stack alphabet, <span
+class="math inline">\(\Gamma_1\)</span> and <span
+class="math inline">\(\Gamma_2\)</span>, and transition functions <span
+class="math inline">\(\delta_1\)</span> and <span
+class="math inline">\(\delta_2\)</span>). The <strong>two-stack
+automaton</strong> <span class="math inline">\(P_{\times}\)</span> that
+composes them is:</p>
+<p><span class="math display">\[P_{\times} =
+\bigl(Q_1 \times Q_2,\
+\Sigma,\
+\Gamma_1,\
+\Gamma_2,\
+\delta_{\times},\
+(q_{1,0}, q_{2,0}),\
+F_1 \times F_2\bigr),\]</span> where <span
+class="math display">\[\delta_{\times}\bigl((q_1,q_2),\,a,\,X,\,Y\bigr)
+=
+\bigl\{
+    \bigl((q_1&#39;,q_2&#39;),\ \alpha,\ \beta\bigr)
+    \,\big|\,
+    (q_1&#39;, \alpha) \in \delta_1(q_1,\,a,\,X)\ \text{and}\ (q_2&#39;,
+\beta) \in \delta_2(q_2,\,\epsilon,\,Y)
+\bigr\},\]</span> and similarly for transitions where <span
+class="math inline">\(P_2\)</span> processes input <span
+class="math inline">\(a\)</span> while <span
+class="math inline">\(P_1\)</span> processes <span
+class="math inline">\(\epsilon\)</span>. The notation means:</p>
+<ul>
+<li><p>On input symbol <span class="math inline">\(a\)</span>, with the
+top of Stack<span class="math inline">\(_1\)</span> being <span
+class="math inline">\(X\)</span> and the top of Stack<span
+class="math inline">\(_2\)</span> being <span
+class="math inline">\(Y\)</span>, the composite automaton transitions to
+<span class="math inline">\((q_1&#39;,q_2&#39;)\)</span>.</p></li>
+<li><p>It replaces <span class="math inline">\(X\)</span> with <span
+class="math inline">\(\alpha\)</span> in Stack<span
+class="math inline">\(_1\)</span> (possibly pushing or popping multiple
+symbols) and <span class="math inline">\(Y\)</span> with <span
+class="math inline">\(\beta\)</span> in Stack<span
+class="math inline">\(_2\)</span>.</p></li>
+</ul>
+<h4 id="interpreting-the-two-stacks-for-multiplication">Interpreting the
+Two Stacks for Multiplication</h4>
+<p>- <strong>Stack<span class="math inline">\(_1\)</span></strong>:
+Manages the state of counting items in one group (similar to your
+single-stack counting idea, but restricted to item-level detail). -
+<strong>Stack<span class="math inline">\(_2\)</span></strong>: Manages
+the state of counting how many groups have been multiplied so far (e.g.,
+for repeated addition).</p>
+<p>During each &ldquo;repeated addition&rdquo; cycle: 1. The item-counting
+sub-automaton (PDA<span class="math inline">\(_1\)</span>) increments
+the partial total by the group size, pushing/popping from Stack<span
+class="math inline">\(_1\)</span>. 2. The group-counting sub-automaton
+(PDA<span class="math inline">\(_2\)</span>) tracks how many times this
+addition has been done, pushing/popping from Stack<span
+class="math inline">\(_2\)</span>.</p>
+<p>Once PDA<span class="math inline">\(_2\)</span> indicates all groups
+have been accounted for, the 2-PDA halts or transitions to an accepting
+state.</p>
+<h2 class="unnumbered"
+id="example-of-counting-three-groups-of-six-high-level-2-pda">Example of
+Counting Three Groups of Six (High-Level 2-PDA)</h2>
+<ol>
+<li><p><strong>Stacks Initialization:</strong></p>
+<ul>
+<li><p>Stack<span class="math inline">\(_1\)</span> starts with the
+necessary markers/symbols to begin item counting.</p></li>
+<li><p>Stack<span class="math inline">\(_2\)</span> starts with a
+symbolic representation of how many groups remain (e.g., 3).</p></li>
+</ul></li>
+<li><p><strong>Item Counting Process (Stack<span
+class="math inline">\(_1\)</span>):</strong></p>
+<ul>
+<li><p>Each time the automaton processes the addition of 6 items to the
+partial total, it pushes/pops in Stack<span
+class="math inline">\(_1\)</span> to record digits in base-<span
+class="math inline">\(b\)</span> or some other scheme.</p></li>
+</ul></li>
+<li><p><strong>Group Countdown (Stack<span
+class="math inline">\(_2\)</span>):</strong></p>
+<ul>
+<li><p>After finishing one addition cycle for 6 items, pop one &ldquo;group
+token&rdquo; from Stack<span class="math inline">\(_2\)</span>.</p></li>
+<li><p>If Stack<span class="math inline">\(_2\)</span> is not empty,
+move on to add another 6.</p></li>
+<li><p>If Stack<span class="math inline">\(_2\)</span> becomes empty,
+the multiplication is complete.</p></li>
+</ul></li>
+</ol>
+<h4 id="why-a-2-pda">Why a 2-PDA?</h4>
+<p>Composing two separate single-stack PDAs <em>in parallel</em>
+effectively yields a machine with two stacks. The 2-PDA formalism lets
+each &ldquo;sub-automaton&rdquo; maintain its independent pushdown memory, which can
+be advantageous if you conceptually want to keep the logic of
+item-counting and group-counting separate. In theoretical terms, a 2-PDA
+is already as powerful as a Turing machine, so it can handle the entire
+repeated-addition multiplication process without additional
+resources.</p>
+<h2 class="unnumbered"
+id="conclusion-on-the-two-stack-approach">Conclusion on the Two-Stack
+Approach</h2>
+<p>Using a two-stack automaton is a straightforward way to
+<strong>combine</strong> two independently designed PDAs so that each
+retains its own stack-based memory management. This might be done for
+instructional clarity or for theoretical completeness when demonstrating
+that distinct counting mechanisms can be kept separate. In practice, a
+single-stack PDA can also implement multiplication by carefully
+interleaving the logic in one stack. However, splitting the tasks across
+two separate stacks can simplify the conceptual breakdown of item
+counting versus group counting.</p>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

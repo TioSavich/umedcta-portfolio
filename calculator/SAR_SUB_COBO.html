@@ -4,7 +4,6 @@
     <title>Subtraction Strategies: Counting Back By Bases and Ones (CBBO)</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -320,13 +319,188 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div>
 
-</body>
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
 
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('https://tiosavich.github.io/UMEDCTA/Calculator/SAR_SUB_COBO.pdf', '_blank');
-    }
-</script>
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Earl had a collection of 65 bird
+feathers, on a trip to a marsh he found lots more feathers to put in his
+collection. Now he has 94 feathers in his collection. How many feathers
+did Earl find at the marsh?</p></li>
+<li><p><strong>Rita</strong> So he had what?</p></li>
+<li><p><strong>Teacher:</strong> He started off with, 65
+feathers.</p></li>
+<li><p><strong>Rita:</strong> 1,2,3,4,5,6 1,2,3,4,5. And then he had how
+many?</p></li>
+<li><p><strong>Teacher:</strong> Well, he had 65 bird feathers. On a
+trip to a marsh, he found lots more and he put them in his collection.
+Now he has 94.</p></li>
+<li><p><strong>Rita:</strong> Well, I can 65, 75, 85. How many did he
+find?</p></li>
+<li><p><strong>Teacher:</strong> Well, that&rsquo;s my question for you. How
+many did he find? He ends up with 94.</p></li>
+<li><p><strong>Rita:</strong> And 85,86,87,88,89,90, 91,92,93,94 and so
+the answer is 20, 21, 22, 23, 24, 25, 26, 27, 28, 29.</p></li>
+<li><p><strong>Teacher</strong> Nice work.</p></li>
+</ul>
+
+<p><strong>Notation Representing Rita&rsquo;s Solution:</strong> <span
+class="math display">\[\begin{aligned}
+    65 + (10) &amp;= 75\\
+    75 + (10) &amp;= 85\\
+    85 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 &amp;= 94\\
+    10 + 10 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 &amp;= 29
+    
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<p><strong>Objective:</strong> Description of Counting On by Bases and
+Then Ones (COBO) Begin with one of the numbers. Break the other number
+into its base units and its ones. Then, &ldquo;count on&rdquo; by adding each base
+unit one at a time, followed by each individual one.</p>
+<p>Why are number lines useful for demonstrating this strategy? COBO is
+essentially a jump strategy&mdash;you start at one number and make &ldquo;jumps&rdquo;
+equal to the other number&rsquo;s base units, then add in the remaining ones.
+Number lines are ideal because they visually display jumps of varying
+lengths and directions. They serve as a picture of the process: a jump
+representing a full base is clearly larger (by a factor of the base)
+than a jump of a single unit.</p>
+<p>Good number line illustrations should:</p>
+<ul>
+<li><p>Clearly represent the relative sizes of the jumps&mdash;each base jump
+should be exactly as many times larger than a single-unit jump as the
+base indicates, with all base jumps the same size and all one-unit jumps
+identical.</p></li>
+<li><p>Indicate the position of 0, or mark a break if that portion of
+the line isn&rsquo;t drawn to scale.</p></li>
+<li><p>Use arrows to indicate direction&mdash;when adding, the jumps go to the
+right (or upward); when subtracting, they go to the left (or
+downward).</p></li>
+<li><p>Mark all landing points clearly&mdash;the numbers you would speak aloud
+when counting on by bases and then ones, just as Lauren
+demonstrated.</p></li>
+</ul>
+<h3 class="unnumbered"
+id="corrected-automata-register-machines">Corrected Automata (Register
+Machines)</h3>
+<p>We define two distinct Register Machines to model these strategies
+accurately.</p>
+<h4 id="automaton-1-cobo-missing-addend">Automaton 1: COBO (Missing
+Addend)</h4>
+<p>This machine models starting at S and counting up to M.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>State</strong></th>
+<th style="text-align: left;"><strong>Condition</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Action</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{init}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">CurrentValue=S; Distance=0</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">**CurrentValue + Base &lt;= M**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">CurrentValue+=Base; Distance+=Base</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">(Overshoot Detected)</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">**CurrentValue &lt; M**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">CurrentValue+=1; Distance+=1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">(Target Reached)</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;">Result=Distance</td>
+</tr>
+</tbody>
+</table>
+<h4 id="automaton-2-cbbo-take-away">Automaton 2: CBBO (Take Away)</h4>
+<p>This machine models starting at M and counting back by S.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>State</strong></th>
+<th style="text-align: left;"><strong>Condition</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Action</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{init}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">CurrentValue=M; Decompose S (BC, OC)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">**BaseCounter (BC) &gt; 0**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">CurrentValue-=Base; BC-=1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">(Bases Exhausted)</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">**OneCounter (OC) &gt; 0**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">CurrentValue-=1; OC-=1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">(Ones Exhausted)</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;">Result=CurrentValue</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+</body>
+    
 </html>

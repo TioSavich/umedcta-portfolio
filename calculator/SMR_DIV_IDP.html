@@ -4,7 +4,6 @@
     <title>Division: Inverse of Distributive Property</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -208,16 +207,189 @@
     }); // End DOMContentLoaded
 </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SMR_DIV_Inverse_of_Distributive_Reasoning.pdf', '_blank');
-    }
-</script>
+    
 
 </div>
 
+
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> A man purchases a 56-inch party sub.
+Each guest at the party receives 8 inches of sub. How many guests can he
+feed?</p></li>
+<li><p><strong>Student:</strong> I got 7 subs.</p></li>
+<li><p><strong>Teacher:</strong> How did you get 7?</p></li>
+<li><p><strong>Student:</strong> Well I broke 56 inches into 40 inches
+and 16 inches. I knew that you could make 5 subs with 40 inches, and 2
+subs with 16 inches, which would give me a total of 7 subs.</p></li>
+</ul>
+<p>To work on this strategy, it is helpful to list out &ldquo;easily known
+multiples&rdquo; of the known number of items in a group. Then you can use
+this to build up to the multiple that you don&rsquo;t know.</p>
+<p>For example, the student likely knew the following: <span
+class="math display">\[\begin{aligned}
+\text{two }8\text{s} &amp;= 16\\
+\text{five }8\text{s} &amp;= 40
+\end{aligned}\]</span></p>
+<p>He might have also known other 8s, like: <span
+class="math display">\[\begin{aligned}
+\text{three }8\text{s} &amp;= 24\\
+\text{eight }8\text{s} &amp;= 64\\
+\text{ten }8\text{s} &amp;= 80
+\end{aligned}\]</span> But then he used the two 8s and five 8s to help
+him solve his problem.</p>
+
+<p><span class="math display">\[\begin{aligned}
+    56 &amp;= ? \times 8\\
+    56 &amp;= 40 + 16\\
+    &amp;= \text{five }8\text{s} + \text{two }8\text{s}\\
+    &amp;= 5\times 8 + 2\times8\\
+    &amp;= 8(5 + 2)\\
+    &amp;= 8\times7\\
+    \text{So, }56 \div 8 &amp;= 7
+    
+\end{aligned}\]</span></p>
+<p>Break the total number of items into multiples that are easier to
+work with. In other words, view the total as an unknown multiple of a
+given group size, then express it in terms of familiar or easily
+calculated multiples. This method essentially involves working
+backwards, highlighting the fact that division is the inverse of
+multiplication.</p>
+<h2 class="unnumbered" id="inverse-of-the-distributive-property">Inverse
+of the Distributive Property</h2>
+<h3 class="unnumbered" id="strategy-overview">Strategy Overview</h3>
+<p>The <strong>Inverse of the Distributive Property</strong> involves
+reversing the distributive property used in multiplication to aid in
+solving division problems. This strategy breaks down the total number of
+items into known multiples, facilitating easier division by calculating
+the quotient based on these decompositions.</p>
+<h3 class="unnumbered" id="automaton-design">Automaton Design</h3>
+<p>We design a <strong>Transducing Automaton</strong> (modeled here as a
+Pushdown Automaton with transduction capabilities) that applies the
+inverse distributive property by:</p>
+<ul>
+<li><p>Decomposing the total into known multiples <span
+class="math inline">\(M\)</span>.</p></li>
+<li><p>Calculating the quotient <span class="math inline">\(Q\)</span>
+by counting the number of times <span class="math inline">\(M\)</span>
+fits into the total.</p></li>
+</ul>
+<h3 class="unnumbered" id="components-of-the-automaton">Components of
+the Automaton</h3>
+<ul>
+<li><p><strong>States:</strong></p>
+<ol>
+<li><p><span class="math inline">\(q_{\text{start}}\)</span>: Start
+state.</p></li>
+<li><p><span class="math inline">\(q_{\text{Decompose}}\)</span>:
+Decomposes the total into known multiples.</p></li>
+<li><p><span class="math inline">\(q_{\text{calculate}}\)</span>:
+Calculates the quotient by counting multiples.</p></li>
+<li><p><span class="math inline">\(q_{\text{output}}\)</span>: Outputs
+the calculated quotient.</p></li>
+</ol></li>
+<li><p><strong>Input Alphabet:</strong> <span
+class="math inline">\(\Sigma = \{M\}\)</span>, where <span
+class="math inline">\(M\)</span> represents a known multiple.</p></li>
+<li><p><strong>Stack Alphabet:</strong> <span
+class="math inline">\(\Gamma = \{ \#, Q, M_n \}\)</span>:</p>
+<ul>
+<li><p><span class="math inline">\(\#\)</span> is the bottom-of-stack
+marker.</p></li>
+<li><p><span class="math inline">\(Q\)</span> represents the
+quotient.</p></li>
+<li><p><span class="math inline">\(M_n\)</span> represents an instance
+of the multiple <span class="math inline">\(M\)</span>
+decomposed.</p></li>
+</ul></li>
+<li><p><strong>Initial Stack Symbol:</strong> <span
+class="math inline">\(\#\)</span></p></li>
+</ul>
+<h3 class="unnumbered" id="automaton-behavior">Automaton Behavior</h3>
+<ol>
+<li><p><strong>Initialization:</strong></p>
+<ul>
+<li><p>Start in <span class="math inline">\(q_{\text{start}}\)</span>;
+push <span class="math inline">\(\#\)</span> onto the stack.</p></li>
+<li><p>Transition to <span
+class="math inline">\(q_{\text{decompose}}\)</span> to begin
+decomposition.</p></li>
+</ul></li>
+<li><p><strong>Decomposing Total:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{decompose}}\)</span>, for
+each known multiple <span class="math inline">\(M\)</span> that fits
+into the remaining total, push <span class="math inline">\(M\)</span>
+onto the stack.</p></li>
+<li><p>Repeat until the total is fully decomposed.</p></li>
+<li><p>Then transition to <span
+class="math inline">\(q_{\text{calculate}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Calculating Quotient:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{calculate}}\)</span>,
+count the number of <span class="math inline">\(M\)</span> symbols on
+the stack.</p></li>
+<li><p>Push the count as <span class="math inline">\(Q\)</span> onto the
+stack.</p></li>
+<li><p>Transition to <span
+class="math inline">\(q_{\text{output}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Outputting the Result:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{output}}\)</span>, read
+<span class="math inline">\(Q\)</span> from the stack and output it as
+the quotient.</p></li>
+</ul></li>
+</ol>
+<h3 class="unnumbered" id="circular-automaton-diagram">Circular
+Automaton Diagram</h3>
+<div class="center">
+
+</div>
+<h3 class="unnumbered" id="example-execution">Example Execution</h3>
+<p><strong>Problem:</strong> Divide 56 items by groups of 8 using the
+inverse distributive property.</p>
+<ol>
+<li><p><strong>Start:</strong></p>
+<ul>
+<li><p>Stack: <span class="math inline">\(\#\)</span></p></li>
+</ul></li>
+<li><p><strong>Decompose:</strong></p>
+<ul>
+<li><p>56 can be decomposed as <span class="math inline">\(8 \times
+7\)</span>.</p></li>
+<li><p>Push 7 multiples of 8 onto the stack.</p></li>
+</ul></li>
+<li><p><strong>Calculate Quotient:</strong></p>
+<ul>
+<li><p>Count the 7 occurrences of <span
+class="math inline">\(M\)</span>.</p></li>
+<li><p>Push <span class="math inline">\(Q = 7\)</span> onto the
+stack.</p></li>
+</ul></li>
+<li><p><strong>Output:</strong></p>
+<ul>
+<li><p>The automaton outputs <span class="math inline">\(7\)</span>,
+meaning 7 groups of 8.</p></li>
+</ul></li>
+</ol>
+<h3 class="unnumbered"
+id="recursive-handling-of-decomposition">Recursive Handling of
+Decomposition</h3>
+<p>The automaton recursively checks for the largest multiple <span
+class="math inline">\(M\)</span> that fits into the remaining total,
+ensuring an efficient decomposition and accurate quotient
+calculation.</p>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

@@ -4,7 +4,6 @@
     <title>Division: Strategic Trials</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -191,17 +190,321 @@
     
 </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SMR_DIV_Strategic_Trials.pdf', '_blank');
-    }
-</script>
+    
 
 </div> <!-- End Container -->
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<p>This is a sharing division strategy. With sharing division problems,
+the number of items in each group is unknown, while the number of groups
+and the total number of items are both known.</p>
+<p><span class="math inline">\(\fbox{Number of groups} \times
+\fbox{Unknown Number of items in each group}  = \fbox{Total number of
+items}\)</span></p>
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Mrs. Carpenter made 56 cupcakes for a
+birthday party. She has eight boxes to carry the cupcakes to his party.
+How many cupcakes should she put in each box if she wants to put the
+same number of cupcakes in each box?</p></li>
+<li><p><strong>Student:</strong> [inaudible] Put seven in.
+Seven.</p></li>
+<li><p><strong>Teacher:</strong> I can tell just tell you did that.
+Thank you very much, Victoria.</p></li>
+</ul>
+<p>This strategy is more sophisticated than Dealing by Ones because it
+involves selecting an initial, reasonable group size, testing it, and
+then logically refining that choice as needed.</p>
+<p><strong>Description of Strategic Trials:</strong></p>
+<p>Begin with an initial trial number for the items per group.
+<strong>Utilize a multiplication strategy</strong> to calculate the
+total number of items and verify it against the given total. Adjust your
+trial number upward or downward as necessary, and recalculate until you
+arrive at the correct result.</p>
+<p><strong>Notation and Visual Representations for Strategic
+Trials:</strong> Use clear notation and diagrams to illustrate the equal
+groups multiplication strategy you have chosen.</p>
+<p>For example, second-grade student Victoria was tasked with
+determining how many cupcakes should be placed in each of 8 boxes, given
+a total of 56 cupcakes. She initially assumed 8 cupcakes per box and
+employed a doubling method to compute the total:</p>
+<p><span class="math display">\[\begin{aligned}
+8 + 8 &amp;= 16\\[5mm]
+16 + 16 &amp;= 32\\[5mm]
+32 + 32 &amp;= 64
+\end{aligned}\]</span></p>
+<p>Seeing that 64 exceeded the given total, she then tried 6 cupcakes
+per box:</p>
+<p><span class="math display">\[\begin{aligned}
+6 + 6 &amp;= 12\\[5mm]
+12 + 12 &amp;= 24\\[5mm]
+24 + 24 &amp;= 48
+\end{aligned}\]</span></p>
+<p>Realizing 48 was too low, Victoria understood she was estimating the
+number of cupcakes per box. After trying 8 (which was too high) and 6
+(which was too low), she decided to test 7 cupcakes per box:</p>
+<p><span class="math display">\[\begin{aligned}
+7 + 7 &amp;= 14\\[5mm]
+14 + 14 &amp;= 28\\[5mm]
+28 + 28 &amp;= 56 \quad \text{(using her addition strategy)}
+\end{aligned}\]</span></p>
+
+<p>She concluded that each box should contain 7 cupcakes. In class, we
+highlighted that her method was not merely &ldquo;trial and error,&rdquo; but a
+thoughtful process of strategic adjustment. When the initial guess was
+too high, she adjusted downward, and when it was too low, she adjusted
+upward. This iterative process is a hallmark of strategic trials.</p>
+<h2 class="unnumbered" id="strategic-trials">Strategic Trials</h2>
+<h3 class="unnumbered" id="strategy-overview">Strategy Overview</h3>
+<p><strong>Strategic Trials</strong> involves testing different grouping
+configurations to find the correct division outcome. This strategy is
+iterative and relies on trial-and-error to determine the appropriate
+number of groups or the group size required for division.</p>
+<h3 class="unnumbered" id="automaton-design">Automaton Design</h3>
+<p>We design a <strong>Pushdown Automaton (PDA)</strong> that
+systematically:</p>
+<ol>
+<li><p>Attempts a trial grouping by pushing a trial marker <span
+class="math inline">\(T\)</span> and assigning a set of
+elements.</p></li>
+<li><p>Checks whether the trial group meets the required size.</p></li>
+<li><p>Adjusts the trial group if the size is incorrect.</p></li>
+<li><p>Upon a correct trial, confirms the group by pushing a group
+identifier <span class="math inline">\(G\)</span> and then outputs the
+final grouping.</p></li>
+</ol>
+<h3 class="unnumbered" id="automaton-tuple">Automaton Tuple</h3>
+<p>The PDA is defined as the 7-tuple <span class="math display">\[M =
+(Q,\,\Sigma,\,\Gamma,\,\delta,\, q_{0/accept},\, \#,\, F)\]</span>
+where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\,
+q_{\text{trial}},\, q_{\text{check}},\, q_{\text{adjust}},\,
+q_{\text{output}}\}\)</span> is the set of states. (Here, <span
+class="math inline">\(q_{0/accept}\)</span> serves as both the start and
+the accepting state.)</p></li>
+<li><p><span class="math inline">\(\Sigma = \{E\}\)</span> is the input
+alphabet (with <span class="math inline">\(E\)</span> representing an
+element).</p></li>
+<li><p><span class="math inline">\(\Gamma = \{\#, T, G\}\)</span> is the
+stack alphabet:</p>
+<ul>
+<li><p><span class="math inline">\(\#\)</span> is the bottom-of-stack
+marker.</p></li>
+<li><p><span class="math inline">\(T\)</span> represents a trial
+grouping.</p></li>
+<li><p><span class="math inline">\(G\)</span> represents a confirmed
+group.</p></li>
+</ul></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is the start
+(and accept) state.</p></li>
+<li><p><span class="math inline">\(\#\)</span> is the initial stack
+symbol.</p></li>
+<li><p><span class="math inline">\(F = \{q_{0/accept}\}\)</span> is the
+set of accepting states.</p></li>
+</ul>
+<h3 class="unnumbered" id="state-transition-table">State Transition
+Table</h3>
+<div class="center">
+<table>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>Current</strong></td>
+<td style="text-align: center;"><strong>Input</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: center;"><strong>Next</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: center;"><strong>Description</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Symbol</strong></td>
+<td style="text-align: center;"><strong>Top</strong></td>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Operation</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{0/accept}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{trial}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: center;">Initialize</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{trial}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">any</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{check}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(T\)</span>; assign a trial group</td>
+<td style="text-align: center;">Attempt trial</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{check}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">any</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;">(If trial correct: push <span
+class="math inline">\(G\)</span>)</td>
+<td style="text-align: center;">Trial correct</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{check}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">any</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{adjust}}\)</span></td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;">Trial incorrect</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{adjust}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">any</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{trial}}\)</span></td>
+<td style="text-align: center;">Adjust trial</td>
+<td style="text-align: center;">Modify trial group</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">any</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{0/accept}\)</span></td>
+<td style="text-align: center;">Count <span
+class="math inline">\(G\)</span>&rsquo;s</td>
+<td style="text-align: center;">Output final grouping</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 class="unnumbered" id="automaton-behavior">Automaton Behavior</h3>
+<ol>
+<li><p><strong>Initialization:</strong></p>
+<ul>
+<li><p>Start in <span class="math inline">\(q_{0/accept}\)</span>, push
+<span class="math inline">\(\#\)</span> onto the stack.</p></li>
+<li><p>Transition to <span
+class="math inline">\(q_{\text{trial}}\)</span> to begin the trial
+process.</p></li>
+</ul></li>
+<li><p><strong>Attempting a Trial:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{trial}}\)</span>, push
+<span class="math inline">\(T\)</span> to represent a trial group and
+assign a set of elements to it.</p></li>
+<li><p>Transition to <span
+class="math inline">\(q_{\text{check}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Checking the Trial:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{check}}\)</span>,
+evaluate if the trial group meets the required size.</p></li>
+<li><p>If the trial is correct, push a confirmed group <span
+class="math inline">\(G\)</span> and transition to <span
+class="math inline">\(q_{\text{output}}\)</span>.</p></li>
+<li><p>If the trial is incorrect, transition to <span
+class="math inline">\(q_{\text{adjust}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Adjusting the Trial:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{adjust}}\)</span>, modify
+the trial group size (by adding or removing elements).</p></li>
+<li><p>Return to <span class="math inline">\(q_{\text{trial}}\)</span>
+to try again.</p></li>
+</ul></li>
+<li><p><strong>Outputting the Result:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{output}}\)</span>, count
+the number of confirmed groups (<span class="math inline">\(G\)</span>
+symbols) on the stack.</p></li>
+<li><p>Output the final grouping and transition back to <span
+class="math inline">\(q_{0/accept}\)</span> (the merged start/accept
+state).</p></li>
+</ul></li>
+</ol>
+<h3 class="unnumbered" id="circular-pda-diagram">Circular PDA Diagram
+</h3>
+<div class="center">
+
+</div>
+<h3 class="unnumbered" id="example-execution">Example Execution</h3>
+<p><strong>Problem:</strong> Divide 24 items into groups of 8 using
+strategic trials.</p>
+<ol>
+<li><p><strong>Start:</strong></p>
+<ul>
+<li><p>The initial stack contains: <span
+class="math inline">\(\#\)</span> followed by 24 <span
+class="math inline">\(E\)</span> symbols.</p></li>
+</ul></li>
+<li><p><strong>Trial 1:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{trial}}\)</span>, a trial
+group of 7 elements is attempted (push <span
+class="math inline">\(T\)</span>, assign 7 <span
+class="math inline">\(E\)</span> symbols).</p></li>
+<li><p>In <span class="math inline">\(q_{\text{check}}\)</span>, the
+trial is evaluated: 7 <span class="math inline">\(\neq\)</span> 8, so
+transition to <span
+class="math inline">\(q_{\text{adjust}}\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Adjust Trial:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{adjust}}\)</span>, the
+trial is modified (e.g., increase group size to 8).</p></li>
+<li><p>Return to <span class="math inline">\(q_{\text{trial}}\)</span>
+for a new attempt.</p></li>
+</ul></li>
+<li><p><strong>Trial 2:</strong></p>
+<ul>
+<li><p>In <span class="math inline">\(q_{\text{trial}}\)</span>, attempt
+a trial group of 8 elements.</p></li>
+<li><p>In <span class="math inline">\(q_{\text{check}}\)</span>, the
+trial is correct (8 = 8); a confirmed group <span
+class="math inline">\(G\)</span> is pushed.</p></li>
+</ul></li>
+<li><p><strong>Repeat:</strong></p>
+<ul>
+<li><p>Continue trials until all 24 items are grouped.</p></li>
+<li><p>Final output: 3 groups of 8.</p></li>
+</ul></li>
+</ol>
+<h3 class="unnumbered" id="iterative-handling-of-trials">Iterative
+Handling of Trials</h3>
+<p>The PDA iteratively attempts different group sizes, adjusting the
+trial configuration as needed based on feedback from the check phase.
+This iterative process continues until the correct grouping is achieved,
+ensuring an accurate division.</p>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

@@ -33,14 +33,7 @@
     <h2>Diagram:</h2>
     <svg id="diagramRASVG" width="100%" height="100%" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid meet"></svg>
 
-        <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-    <script>
-        function openPdfViewer() {
-            // Opens the PDF documentation for the strategy.
-            window.open('./SAR_ADD_ROUNDING.pdf', '_blank');
-        }
-    </script>
+        
 
     <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -289,5 +282,165 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Lucy has eight fish. She wants to buy
+five more fish. How many fish will Lucy have then?</p></li>
+<li><p><strong>Robert:</strong> 13</p></li>
+<li><p><strong>Teacher:</strong> How&rsquo;d you get the 13?</p></li>
+<li><p><strong>Robert:</strong> I just took the eight out. And then I,
+if she had ten fish, it would have been 15. If she had nine fish, it
+would have been 14. And if it would have been eight fish, which it was,
+it would have been 13. So, I just got 13.</p></li>
+<li><p><strong>Teacher:</strong> Did you use those blocks to solve this
+problem?</p></li>
+<li><p><strong>Robert:</strong> Well, I only used eight. I didn&rsquo;t use
+the other five, though. I used part of it in here (gestures to the mat
+with the blocks) and part of it in my head. you get 13.</p></li>
+</ul>
+
+<p><strong>Notation Representing Robert&rsquo;s Solution:</strong></p>
+<p><span class="math display">\[\begin{aligned}
+8 + 5 &amp;= \Box \\
+8+2 &amp;= 10\\
+10+5 &amp;= 15\\
+8+5 &amp;= 15-2\\
+8+5 &amp;= 13\\
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<p><strong>Objective:</strong> Rounding for Simplicity: We start by
+changing at least one number to a &ldquo;friendlier&rdquo; value &mdash; usually rounding
+it to the closest whole number of bases. For instance, if a number is
+just a few ones short of a multiple of 10, we can round it up so that it
+becomes exactly that multiple. This makes the arithmetic easier because
+we have well-known patterns (adding a full group of 10, for example)
+where the ones digit remains unchanged and only the tens (or &ldquo;base&rdquo;)
+digit increases.</p>
+<ol>
+<li><p><strong>The Need to Adjust:</strong> When you round up a number,
+you are effectively adding a little extra to it. As a result, when you
+solve the simplified problem, your computed sum is slightly too high
+compared to the original one. To correct for this, you must subtract the
+extra amount that you added. Conversely, if you had rounded down (i.e.,
+subtracted some value to simplify the number), then your computed sum
+would be too low, and you would need to add that amount back
+in.</p></li>
+<li><p><strong>Why the Inverse Operation?</strong> The principle is
+simple: whatever operation you use to alter the number for ease of
+calculation must be undone by the inverse operation to return to the
+original value.</p>
+<ul>
+<li><p>If you <strong>add</strong> to round a number up, you must
+<strong>subtract</strong> later to adjust.</p></li>
+<li><p>If you <strong>subtract</strong> to round a number down, you must
+<strong>add</strong> back the same amount after solving.</p></li>
+</ul>
+<p>This two-step process&mdash;first simplifying via rounding and then
+adjusting&mdash;helps you manage complex addition while keeping the final
+answer accurate to the original numbers.</p></li>
+</ol>
+<h2 class="unnumbered" id="rounding-and-adjusting">Rounding and
+Adjusting</h2>
+<h3 class="unnumbered" id="description-of-strategy-1">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Round one addend to a convenient
+number (usually a base multiple), perform the addition, then adjust the
+result.</p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(46 +
+37\)</span></p>
+<ul>
+<li><p>Round <span class="math inline">\(46\)</span> up to <span
+class="math inline">\(50\)</span> (adding <span
+class="math inline">\(4\)</span>).</p></li>
+<li><p>Add: <span class="math inline">\(50 + 37 = 87\)</span>.</p></li>
+<li><p>Adjust: Subtract the <span class="math inline">\(4\)</span> added
+earlier: <span class="math inline">\(87 - 4 = 83\)</span>.</p></li>
+</ul></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type</h3>
+<p><strong>Pushdown Automaton (PDA)</strong>: Needed to remember the
+adjustment amount.</p>
+<h3 class="unnumbered"
+id="corrected-automaton-register-machine-model">Corrected Automaton
+(Register Machine Model)</h3>
+<p>We define a Register Machine that models "Rounding and Adjusting" as
+an elaboration that utilizes previously learned strategies as cognitive
+subroutines. This model assumes the "Round Up, Adjust Down" variant.</p>
+<p><strong>M = (Q, V, , q_0, F)</strong></p>
+<ul>
+<li><p><strong>States (Q):</strong> <span><span
+class="math inline">\(q_{start}, q_{calc\_K}, q_{add}, q_{adjust},
+q_{accept}\)</span></span></p></li>
+<li><p><strong>Registers (V):</strong> <span>Target (Number to round),
+Other (Second addend), K (Adjustment), A_rounded, TempSum,
+Result</span></p></li>
+</ul>
+<p><strong>Transition Function () - Highlighting
+Elaboration:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Current State</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Subroutine/Action</strong></th>
+<th style="text-align: left;"><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{start}\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{calc\_K}\)</span></td>
+<td style="text-align: left;">Read A, B. (Heuristic: Select
+Target/Other)</td>
+<td style="text-align: left;">Start. Select number closer to the next
+base.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{calc\_K}\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add}\)</span></td>
+<td style="text-align: left;"><strong>Count Up To Base(Target)</strong>
+-&gt; K, A_rounded</td>
+<td style="text-align: left;">Determine K by counting up from Target to
+the next base.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add}\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{adjust}\)</span></td>
+<td style="text-align: left;"><strong>COBO(A_rounded, Other)</strong>
+-&gt; TempSum</td>
+<td style="text-align: left;">Add Other to the rounded A. (Efficient as
+A_rounded is a base).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{adjust}\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;"><strong>Count Back(TempSum, K)</strong>
+-&gt; Result</td>
+<td style="text-align: left;">Adjust by counting back K from the
+TempSum.</td>
+</tr>
+</tbody>
+</table>
+<h3 class="unnumbered"
+id="automaton-diagram-for-rounding-and-adjusting">Automaton Diagram for
+Rounding and Adjusting</h3>
+</div>
+</details>
 </body>
 </html>

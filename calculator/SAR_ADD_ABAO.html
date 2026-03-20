@@ -4,7 +4,6 @@
     <title>Addition Strategies: Adding Bases and Adding Ones (ABAO)</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -448,16 +447,113 @@
 
 </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SAR_ADD_ABAO.pdf', '_blank');
-    }
-</script>
+    
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>. The video
+for this student&rsquo;s strategy was not a CGI video and has been removed
+from publicly accessible databases.</p>
+<p>It involved a student named Sarah, who solved 65+25. She said the
+following:</p>
+<p><strong>Sarah&rsquo;s solution:</strong> &rdquo;I used decomposing, I broke 65
+into 60 and five. I broke 25 into 20 and five. I added the 60 and the 20
+and I got 80. I added the 5 to 5 and I got ten. I connected the 5 to the
+80 and I got 90.&rdquo;</p>
+
+<p><strong>Notation Representing Sarah&rsquo;s Solution:</strong></p>
+<p><span class="math display">\[\begin{aligned}
+65 + 25 &amp;= \Box \\
+60 + 20 &amp;= 80\\
+5 + 5  &amp;= 10\\
+80+10 &amp;= 90
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Split both addends into bases and
+ones, add bases together and ones together, then combine the partial
+sums.</p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(65 +
+25\)</span></p>
+<ul>
+<li><p>Split: <span class="math inline">\(65 = 60 + 5\)</span>, <span
+class="math inline">\(25 = 20 + 5\)</span>.</p></li>
+<li><p>Add bases: <span class="math inline">\(60 + 20 =
+80\)</span>.</p></li>
+<li><p>Add ones: <span class="math inline">\(5 + 5 =
+10\)</span>.</p></li>
+<li><p>Combine: <span class="math inline">\(80 + 10 =
+90\)</span>.</p></li>
+</ul></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type</h3>
+<p><strong>Pushdown Automaton (PDA)</strong>: Needed to handle
+composition-over when adding ones.</p>
+<h3 class="unnumbered" id="formal-description-of-the-automaton">Formal
+Description of the Automaton</h3>
+<p>We define the PDA as the 7-tuple <span class="math display">\[M =
+(Q,\, \Sigma,\, \Gamma,\, \delta,\, q_{0/accept},\, Z_0,\, F)\]</span>
+where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\, q_1,\, q_2,\,
+q_3,\, q_4,\, q_5\}\)</span> is the set of states.</p></li>
+<li><p><span class="math inline">\(\Sigma =
+\{0,1,2,3,4,5,6,7,8,9,+\}\)</span> is the input alphabet.</p></li>
+<li><p><span class="math inline">\(\Gamma = \{Z_0\} \cup \{c \mid c \in
+\mathbb{N}\}\)</span> is the stack alphabet, where <span
+class="math inline">\(Z_0\)</span> is the initial stack symbol and a
+symbol <span class="math inline">\(c\)</span> represents a
+composition-over.</p></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is the start
+state (which is also the accept state).</p></li>
+<li><p><span class="math inline">\(Z_0\)</span> is the initial stack
+symbol.</p></li>
+<li><p><span class="math inline">\(F = \{q_{0/accept}\}\)</span> is the
+set of accepting states.</p></li>
+</ul>
+<p>The transition function <span class="math inline">\(\delta\)</span>
+is defined as follows:</p>
+<ol>
+<li><p><span class="math inline">\(\delta(q_{0/accept},\,
+\text{``}A,B\text{&#39;&#39;},\, Z_0) = \{(q_1,\, Z_0)\}\)</span><br />
+(Read <span class="math inline">\(A\)</span> and <span
+class="math inline">\(B\)</span> and split each into its base (tens,
+hundreds, <span class="math inline">\(\ldots\)</span>) and ones
+components.)</p></li>
+<li><p><span class="math inline">\(\delta(q_1,\, \varepsilon,\, Z_0) =
+\{(q_2,\, Z_0)\}\)</span><br />
+(Add the bases: compute <span class="math inline">\(A_{\text{base}} +
+B_{\text{base}}\)</span>.)</p></li>
+<li><p><span class="math inline">\(\delta(q_2,\, \varepsilon,\, Z_0) =
+\{(q_3,\, Z_0)\}\)</span><br />
+(Add the ones: compute <span class="math inline">\(A_{\text{ones}} +
+B_{\text{ones}}\)</span>.)</p></li>
+<li><p><span class="math inline">\(\delta(q_3,\, \varepsilon,\, Z_0) =
+\{(q_4,\, c\,Z_0)\}\)</span><br />
+(If the ones sum is greater than or equal to the base, push the
+composition <span class="math inline">\(c\)</span> onto the
+stack.)</p></li>
+<li><p><span class="math inline">\(\delta(q_4,\, \varepsilon,\, c) =
+\{(q_5,\, c)\}\)</span><br />
+(Adjust the bases sum by adding the composition-over <span
+class="math inline">\(c\)</span>.)</p></li>
+<li><p><span class="math inline">\(\delta(q_5,\, \varepsilon,\, Z_0) =
+\{(q_{0/accept},\, Z_0)\}\)</span><br />
+(Combine the adjusted bases sum with the ones sum and output the final
+result.)</p></li>
+</ol>
+<h3 class="unnumbered" id="automaton-diagram-for-abao">Automaton Diagram
+for ABAO</h3>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

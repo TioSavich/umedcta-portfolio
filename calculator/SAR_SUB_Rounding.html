@@ -253,16 +253,171 @@
 });
   </script>
 
-      <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SAR_SUB_ROUNDING.pdf', '_blank');
-    }
-</script>
+      
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="rounding-and-adjusting">Rounding and
+Adjusting</h2>
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and curation by Amy Hackenberg.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Kevin had 84 gumdrops. During the week,
+he ate 29 gumdrops. How many gumdrops does he have left?</p></li>
+<li><p><strong>Kevin:</strong> 55.</p></li>
+<li><p><strong>Teacher:</strong> How&rsquo;d you get 55?</p></li>
+<li><p><strong>Kevin:</strong> I knew if I had 80 gumdrops and I ate 20,
+I knew I would have 60 gumdrops. But I had to add 4 more because it was
+84 minus 20, so that would be 64. And I took away 4 more, and that would
+be 60. But I had to take away 5 more and that would be 55.</p></li>
+</ul>
+<h2 class="unnumbered" id="picture">Picture</h2>
+<div class="center">
+
+</div>
+<h2 class="unnumbered" id="notation">Notation</h2>
+<p><strong>Rounding</strong></p>
+<p><span class="math display">\[\begin{aligned}
+84-29 = \Box\\
+84-4 = 80\\
+29-9 = 20\\
+80-20 = 60
+\end{aligned}\]</span></p>
+<p><strong>Adjusting</strong></p>
+<p><span class="math display">\[\begin{aligned}
+60+4 = 64\\
+64-4 = 60\\
+60-5 = 55
+\end{aligned}\]</span></p>
+<h2 class="unnumbered" id="explaining-the-adjusting">Explaining the
+Adjusting</h2>
+<ul>
+<li><p>Kevin knew that if he had 80 gumdrops and ate 20, he would have
+60 gumdrops left.</p></li>
+<li><p>Rounding the known whole down by 4 makes the unknown part too
+small by 4.</p></li>
+<li><p>So, adjust the difference by adding 4 gumdrops back to get
+64.</p></li>
+<li><p>Rounding the known part down by 9 makes the unknown part too big
+by 9</p></li>
+<li><p>So, adjust the difference by subtracting 9. Kevin does this by
+chunking back by 4 (to get 60) and then by 5 (to get 55).</p></li>
+</ul>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy</h3>
+<p>Change either the known part or the known whole to a &ldquo;good&rdquo;
+number&mdash;usually the nearest base&mdash;to make the subtraction easier. Then
+subtract and adjust your answer. This extra adjusting step can be a bit
+trickier than rounding when you add!</p>
+<ul>
+<li><p>If you round the known whole up, you pretend you had more than
+you really did, so the unknown part seems too big.</p></li>
+<li><p>If you round the known whole down, you act like you had less, and
+you&rsquo;ll need to add back what you subtracted at the end.</p></li>
+<li><p>Similarly, if you round the known part down, you&rsquo;re not
+subtracting enough and must add back in.</p></li>
+<li><p>If you round the known part up, you subtract too much and need to
+add some back to fix it.</p></li>
+</ul>
+<h3 class="unnumbered"
+id="corrected-automaton-register-machine-model">Corrected Automaton
+(Register Machine Model)</h3>
+<p>We define a Register Machine that models Kevin&rsquo;s double-rounding
+strategy, including the iterative chunking used during the final
+adjustment.</p>
+<p>**M = (Q, V, , q_0, F)**</p>
+<ul>
+<li><p><strong>States (Q):</strong> <span><span
+class="math inline">\(q_{start}, q_{round\_M}, q_{round\_S},
+q_{subtract}, q_{adjust\_M}, q_{init\_adjust\_S}, q_{loop\_adjust\_S},
+q_{accept}\)</span></span></p></li>
+<li><p><strong>Registers (V):</strong> M_rounded, S_rounded, K_M
+(adjustment for M), K_S (adjustment for S), TempResult, K_S_Remaining,
+Chunk.</p></li>
+</ul>
+<p>**Key Transitions ():**</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Current State</strong></th>
+<th style="text-align: left;"><strong>Condition</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Action</strong></th>
+<th style="text-align: left;"><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{round\_M}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{round\_S}\)</span></td>
+<td style="text-align: left;">M_r = RoundDown(M); K_M = M-M_r</td>
+<td style="text-align: left;">Round M down. Store K_M.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{round\_S}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{subtract}\)</span></td>
+<td style="text-align: left;">S_r = RoundDown(S); K_S = S-S_r</td>
+<td style="text-align: left;">Round S down. Store K_S.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{subtract}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{adjust\_M}\)</span></td>
+<td style="text-align: left;">TempResult = M_r - S_r</td>
+<td style="text-align: left;">Calculate intermediate result.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{adjust\_M}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{init\_adjust\_S}\)</span></td>
+<td style="text-align: left;">TempResult += K_M</td>
+<td style="text-align: left;">Compensate for M (Add back).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{init\_adjust\_S}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{loop\_adjust\_S}\)</span></td>
+<td style="text-align: left;">K_S_Remaining = K_S</td>
+<td style="text-align: left;">Initialize S adjustment (Subtract).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{loop\_adjust\_S}\)</span></td>
+<td style="text-align: left;">**K_S_Rem &gt; 0**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{loop\_adjust\_S}\)</span></td>
+<td style="text-align: left;">Calculate strategic Chunk (C);
+TempResult-=C; K_S_Rem-=C</td>
+<td style="text-align: left;">Iterative chunking (Inverse RMB).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{loop\_adjust\_S}\)</span></td>
+<td style="text-align: left;">**K_S_Rem == 0**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;">Result = TempResult</td>
+<td style="text-align: left;">Finished.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
 </body>
 </html>

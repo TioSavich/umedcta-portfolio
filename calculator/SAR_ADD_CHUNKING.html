@@ -4,7 +4,6 @@
     <title>Addition Strategies: Chunking by Bases and Ones</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -398,13 +397,80 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div>
 
-</body>
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>. Problem:
+Max has 46 comic books. For his birthday, his father gives him 37 more
+comic books. How many comic books does Max have now?</p>
+<p><strong>Dionne&rsquo;s solution:</strong> &ldquo;He has 46. Then 37 more.
+<span>[</span>She writes down 46, 76.<span>]</span> That&rsquo;s the 30. And
+then 7 more. Well, 4 more makes 80, and then I only need to do 3 more,
+83.&rdquo;</p>
 
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SAR_ADD_Chunking.pdf', '_blank');
-    }
-</script>
+<p><strong>Notation Representing Sarah&rsquo;s Solution:</strong></p>
+<p><span class="math display">\[\begin{aligned}
+46 + 37 &amp;= \Box \\
+46 + 30 &amp;= 76\\
+76 + 4  &amp;= 80\\
+80+3 &amp;= 83
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<p><strong>Objective:</strong> Begin with one number. Then, break the
+other number down into bases and units. In COBO, you count on each base
+individually - then the ones. With Chunking, instead of adding each base
+individually, add them in well-chosen, larger groups. Likewise, combine
+the units in groups rather than one by one&mdash;though there are instances
+when adding a single base or unit makes strategic sense. The overall
+goal is to create larger, intentional groupings, and it&rsquo;s important to
+clarify why each grouping is considered strategic. Usually, the goal
+with chunking on ones is to make a base first, then you can chunk on the
+rest of the ones. Usually when chunking on the bases, the goal is to
+make a base-of-bases first (so, in base ten, the goal would be to try
+and make one hundred), because then you can chunk on the rest of the
+bases (and ones) all at once.</p>
+<h3 class="unnumbered" id="description-of-strategy-1">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Similar to COBO but add bases and
+ones in larger, strategic chunks.</p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(46 +
+37\)</span></p>
+<ul>
+<li><p>Start at <span class="math inline">\(46\)</span>.</p></li>
+<li><p>Add all tens at once: <span class="math inline">\(46 + 30 =
+76\)</span>.</p></li>
+<li><p>Add ones strategically: <span class="math inline">\(76 + 4 =
+80\)</span>, then <span class="math inline">\(80 + 3 =
+83\)</span>.</p></li>
+</ul></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type</h3>
+<p><strong>Finite State Automaton (FSA)</strong> with basic arithmetic
+capability.</p>
+<h3 class="unnumbered"
+id="corrected-automaton-sar_add_chunkingregister-machine-model">Corrected
+Automaton SAR_ADD_Chunking(Register Machine Model)</h3>
+<p>We define a Register Machine that models Chunking by explicitly
+including the base aggregation and the iterative cognitive steps
+required for the strategic RMB subroutine.</p>
+<p>**M = (Q, V, , q_0, F)**</p>
+<ul>
+<li><p><strong>States (Q):</strong> <span><span
+class="math inline">\(q_{start}, q_{init}, q_{add\_base\_chunk},
+q_{init\_ones\_chunk}, q_{init\_K}, q_{loop\_K}, q_{add\_ones\_chunk},
+q_{accept}\)</span></span></p></li>
+<li><p><strong>Registers (V):</strong> <span>Sum, BasesRemaining,
+OnesRemaining, K (strategic gap)</span></p></li>
+</ul>
+<h3 class="unnumbered"
+id="automaton-diagram-for-chunking-by-bases-and-ones">Automaton Diagram
+for Chunking by Bases and Ones</h3>
+</div>
+</details>
+</body>
+    
 </html>

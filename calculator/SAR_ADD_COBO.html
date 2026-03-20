@@ -4,7 +4,6 @@
     <title>Addition Strategies: Counting On By Bases and Ones (COBO)</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -297,15 +296,187 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <button class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
+    </div>
+
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Max has 46 comic books. For his
+birthday, his father gives him 37 more comic books. How many comic books
+does Max have now?</p></li>
+<li><p><strong>Lauren:</strong> Forty-six &hellip;</p></li>
+<li><p><strong>Teacher:</strong> He gets 37 more for his
+birthday.</p></li>
+<li><p><strong>Lauren:</strong> Ok. 46, 56, 66, 76, 77, 78, 79, 80, 81,
+82, 83. It&rsquo;s 83.</p></li>
+<li><p><strong>Teacher:</strong> Good work.</p></li>
+</ul>
+
+<p><strong>Notation Representing Sarah&rsquo;s Solution:</strong></p>
+<p><span class="math display">\[\begin{aligned}
+46 + 37 &amp;= \Box \\
+46+10 &amp;= 56\\
+56+10 &amp;= 66\\
+66+10 &amp;= 76\\
+76+1 &amp;= 77\\
+77+1 &amp;= 78\\
+78+1 &amp;= 79\\
+79+1 &amp;= 80\\
+80+1 &amp;= 81\\
+81+1 &amp;= 82\\
+82+1 &amp;= 83\\
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<p><strong>Objective:</strong> Description of Counting On by Bases and
+Then Ones (COBO) Begin with one of the numbers. Break the other number
+into its base units and its ones. Then, &ldquo;count on&rdquo; by adding each base
+unit one at a time, followed by each individual one.</p>
+<p>Why are number lines useful for demonstrating this strategy? COBO is
+essentially a jump strategy&mdash;you start at one number and make &ldquo;jumps&rdquo;
+equal to the other number&rsquo;s base units, then add in the remaining ones.
+Number lines are ideal because they visually display jumps of varying
+lengths and directions. They serve as a picture of the process: a jump
+representing a full base is clearly larger (by a factor of the base)
+than a jump of a single unit.</p>
+<p>Good number line illustrations should:</p>
+<ul>
+<li><p>Clearly represent the relative sizes of the jumps&mdash;each base jump
+should be exactly as many times larger than a single-unit jump as the
+base indicates, with all base jumps the same size and all one-unit jumps
+identical.</p></li>
+<li><p>Indicate the position of 0, or mark a break if that portion of
+the line isn&rsquo;t drawn to scale.</p></li>
+<li><p>Use arrows to indicate direction&mdash;when adding, the jumps go to the
+right (or upward); when subtracting, they go to the left (or
+downward).</p></li>
+<li><p>Mark all landing points clearly&mdash;the numbers you would speak aloud
+when counting on by bases and then ones, just as Lauren
+demonstrated.</p></li>
+</ul>
+<h2 class="unnumbered"
+id="counting-on-by-bases-and-then-ones-cobo">Counting On by Bases and
+Then Ones (COBO)</h2>
+<h3 class="unnumbered" id="description-of-strategy-1">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Start with one addend, add bases from
+the other addend one by one, then add ones one by one.</p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(46 +
+37\)</span></p>
+<ul>
+<li><p>Start at <span class="math inline">\(46\)</span>.</p></li>
+<li><p>Add tens one by one: <span class="math inline">\(46 \rightarrow
+56 \rightarrow 66 \rightarrow 76\)</span>.</p></li>
+<li><p>Add ones one by one: <span class="math inline">\(76 \rightarrow
+77 \rightarrow \ldots \rightarrow 83\)</span>.</p></li>
+</ul></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type</h3>
+<p><strong>Finite State Automaton (FSA) with Counters</strong>: Counters
+are used to manage the repeated addition:</p>
+<ul>
+<li><p><strong>BaseCounter:</strong> Number of base units (e.g., tens)
+to add.</p></li>
+<li><p><strong>OneCounter:</strong> Number of ones to add.</p></li>
+<li><p><strong>Sum:</strong> The running total.</p></li>
+</ul>
+<h3 class="unnumbered"
+id="automaton-definition-sar_add_cobo-register-machine-model">Automaton
+Definition SAR_ADD_COBO (Register Machine Model)</h3>
+<p>To legitimately and deterministically represent the COBO strategy, we
+define a Register Machine with clearly defined, mutually exclusive
+conditions.</p>
+<p><strong>M = (Q, V, , q_0, F)</strong></p>
+<ul>
+<li><p><strong>Q (States):</strong> <span><span
+class="math inline">\(q_{start}, q_{initialize}, q_{add\_bases},
+q_{add\_ones}, q_{accept}\)</span></span></p></li>
+<li><p><strong>V (Registers):</strong> <span>A (Input), B (Input), Sum,
+BaseCounter, OneCounter</span></p></li>
+<li><p><strong>Constants:</strong> BaseUnit (e.g., 10)</p></li>
+</ul>
+<p><strong>Transition Function ():</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Current State</strong></th>
+<th style="text-align: left;"><strong>Condition</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Action</strong></th>
+<th style="text-align: left;"><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{start}\)</span></td>
+<td style="text-align: left;">(Input)</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{initialize}\)</span></td>
+<td style="text-align: left;">Read A, Read B</td>
+<td style="text-align: left;">Start.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{initialize}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">Sum = A BaseCounter = B // BaseUnit
+OneCounter = B % BaseUnit</td>
+<td style="text-align: left;">Initialize Sum. Decompose B into Bases and
+Ones.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;"><strong>BaseCounter &gt; 0</strong></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;">Sum = Sum + BaseUnit BaseCounter =
+BaseCounter - 1</td>
+<td style="text-align: left;">Add one BaseUnit (Loop).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_bases}\)</span></td>
+<td style="text-align: left;"><strong>BaseCounter == 0</strong></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">All bases added. Transition to adding
+ones.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;"><strong>OneCounter &gt; 0</strong></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;">Sum = Sum + 1 OneCounter = OneCounter -
+1</td>
+<td style="text-align: left;">Add 1 (Loop).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{add\_ones}\)</span></td>
+<td style="text-align: left;"><strong>OneCounter == 0</strong></td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;">Output Sum</td>
+<td style="text-align: left;">All ones added. Accept.</td>
+</tr>
+</tbody>
+</table>
+<h3 class="unnumbered" id="automaton-diagram-for-cobo">Automaton Diagram
+for COBO</h3>
 </div>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SAR_ADD_COBO.pdf', '_blank');
-    }
-</script>
-
+</details>
 </body>
 </html>

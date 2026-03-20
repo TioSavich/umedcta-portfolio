@@ -4,7 +4,6 @@
     <title>Subtraction Strategies: Decomposition</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -36,14 +35,7 @@
 <h2>Diagram:</h2>
 <svg id="diagramDecompositionSVG" width="700" height="800"></svg> <!-- Adjusted height -->
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('https://tiosavich.github.io/UMEDCTA/Calculator/SAR_SUB_DECOMPOSITION.pdf', '_blank');
-    }
-</script>
+    
 
 <script>
     // --- Helper SVG Functions --- (Keep functions from previous version: drawBlock, drawTenBlock, drawHundredBlock, createText, drawCrossOut) ---
@@ -379,5 +371,147 @@
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span></p>
+<ul>
+<li><p><strong>Teacher:</strong> Lucy ordered 45 cupcakes for her
+birthday. At the party, her guests ate 27 cupcakes, how many cupcakes
+did she have left? [BACKGROUND]</p></li>
+<li><p><strong>Joel:</strong> This is 10, this is 10, this is 10, this
+is 10 and this is five.18.</p></li>
+<li><p><strong>Teacher:</strong> Explain to us what you did
+there.</p></li>
+<li><p><strong>Joel:</strong> I have, this is 10, this is 10, this is
+10, and this is five. So I take away 20 and I take away five. I take
+away two more. So they enter and then I counted these and those, and so
+the answer was 18.</p></li>
+<li><p><strong>Teacher:</strong> Nice work</p></li>
+</ul>
+<p><strong>Notation Representing Joel&rsquo;s Solution:</strong> <span
+class="math display">\[\begin{aligned}
+      47-27 &amp; \\
+      45 - 20 &amp;=25 \\
+      25 - 7 &amp;= ?\\
+      &amp;2 \text{ tens } + 5 \text{ ones } - 7 \text{ ones } \\
+      1 \text{ ten } + &amp;1 \text{ ten } + 5 \text{ ones } - 7 \text{
+ones } \\
+                             &amp;\downarrow \text{DECOMPOSE}\\
+      1 \text{ ten } + &amp;10 \text{ ones }+5 \text{ ones } - 7 \text{
+ones } \\
+      &amp;1 \text{ ten } + 8 \text{ ones }+\underbrace{7 \text{ ones }-
+7 \text{ ones }}_{=0}\\
+      %                                 &amp;=0 \\
+      &amp;1 \text{ ten } + 8 \text{ ones }
+      
+\end{aligned}\]</span></p>
+
+<p><strong>Notation Representing Joel&rsquo;s Solution:</strong> Imagine
+representing both numbers by their base units and ones. Begin by
+subtracting the base components, then subtract the ones. If there aren&rsquo;t
+enough ones available in the larger number to subtract the ones from the
+smaller number (while keeping the result positive), break one base unit
+into its individual ones. Finally, remove only the exact number of ones
+required to complete the subtraction.</p>
+<h2 class="unnumbered" id="decomposition">Decomposition</h2>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Decompose a base unit from the
+minuend into ones to have enough ones to subtract the ones in the
+subtrahend.</p></li>
+</ul>
+<h3 class="unnumbered"
+id="corrected-automaton-register-machine-model">Corrected Automaton
+(Register Machine Model)</h3>
+<p>We define a Register Machine that accurately models Joel&rsquo;s
+Left-to-Right cognitive sequence. This model is simplified for two
+digits (Tens and Ones) to match the example, assuming M &gt;= S.</p>
+<p>**M = (Q, V, , q_0, F)**</p>
+<ul>
+<li><p><strong>States (Q):</strong> <span><span
+class="math inline">\(q_{init}, q_{sub\_bases}, q_{check\_ones},
+q_{decompose}, q_{sub\_ones}, q_{accept}\)</span></span></p></li>
+<li><p><strong>Registers (V):</strong> S_T/S_O (Subtrahend Tens/Ones),
+R_T/R_O (Result/Working Memory Tens/Ones).</p></li>
+</ul>
+<p>**Transition Function ():**</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Current State</strong></th>
+<th style="text-align: left;"><strong>Condition</strong></th>
+<th style="text-align: left;"><strong>Next State</strong></th>
+<th style="text-align: left;"><strong>Action</strong></th>
+<th style="text-align: left;"><strong>Interpretation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{init}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">Decompose S (S_T/O). Init R=M
+(R_T/O).</td>
+<td style="text-align: left;">Initialize place values.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_bases}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{check\_ones}\)</span></td>
+<td style="text-align: left;">R_T -= S_T</td>
+<td style="text-align: left;">Subtract the bases (Tens).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{check\_ones}\)</span></td>
+<td style="text-align: left;">**R_O &gt;= S_O**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Sufficient ones.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{check\_ones}\)</span></td>
+<td style="text-align: left;">**R_O &lt; S_O**</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{decompose}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">Insufficient ones.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{decompose}\)</span></td>
+<td style="text-align: left;">R_T &gt; 0</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">R_T -= 1; R_O += Base</td>
+<td style="text-align: left;">Decompose (borrow) one ten.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><span
+class="math inline">\(q_{sub\_ones}\)</span></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;"><span
+class="math inline">\(q_{accept}\)</span></td>
+<td style="text-align: left;">R_O -= S_O</td>
+<td style="text-align: left;">Subtract the ones.</td>
+</tr>
+</tbody>
+</table>
+<h3 class="unnumbered"
+id="automaton-diagram-for-decomposition">Automaton Diagram for
+Decomposition</h3>
+</div>
+</details>
 </body>
 </html>

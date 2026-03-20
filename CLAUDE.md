@@ -89,3 +89,16 @@ Available gstack skills:
 - `/qa` - QA testing
 - `/qa-only` - QA only (no code changes)
 - `/design-review` - Design review
+- `/setup-browser-cookies` - Set up browser cookies
+- `/retro` - Retrospective
+- `/investigate` - Investigate an issue
+- `/document-release` - Document a release
+- `/codex` - Codex tasks
+- `/careful` - Careful mode
+- `/freeze` - Freeze changes
+- `/guard` - Guard mode
+- `/unfreeze` - Unfreeze changes
+- `/gstack-upgrade` - Upgrade gstack
+
+If gstack skills aren't working, run `cd .claude/skills/gstack && ./setup` to build
+the binary and register skills.

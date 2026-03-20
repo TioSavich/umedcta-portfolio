@@ -4,7 +4,6 @@
     <title>Multiplication: Strategic Counting</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -46,14 +45,7 @@
 <h2>Diagram:</h2>
 <svg id="diagramStratCountSVG" width="900" height="400"></svg> <!-- Wider SVG -->
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('./SMR_MULT_Strat_Count.pdf', '_blank');
-    }
-</script>
+    
 
 <script>
     // --- Helper SVG Functions --- (Define globally or within DOMContentLoaded)
@@ -440,5 +432,149 @@
 
 </div>
 
+
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>.</p>
+<p>This method uses additive techniques&mdash;like Rearranging Ones to Make
+Bases (RMB), Chunking, or Rounding&mdash;to manage two distinct types of units
+while calculating the total number of items. The goal isn&rsquo;t to count one
+by one but to employ a more efficient grouping strategy. Nonetheless,
+each group is still added sequentially, one at a time.</p>
+<p>For example, if you have six groups of 7, you could use rearranging
+to make bases several times &ndash; keeping track of the number of groups and
+the total number of items in each group &ndash; to obtain 42.</p>
+
+<p>Or, for the same problem, you could pretend to add 10, then adjust
+back by three, over and over again until you reach the total.</p>
+
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Use any of several
+<strong>additive</strong> strategies (for example, rearranging ones to
+make bases, chunking, rounding, etc.) to add the group size without
+counting each item by ones.</p></li>
+<li><p><strong>Method:</strong> Instead of incrementing one by one,
+interpret the multiplication problem as repeated addition of the group
+size, then apply one of the <strong>efficient</strong> addition
+strategies for each step.</p></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type</h3>
+<p><strong>Finite State Automaton with Registers (Counters)</strong>.
+Below is a high-level representation. A two-stack automaton approach is
+described later.</p>
+<h3 class="unnumbered"
+id="formal-description-of-a-high-level-fsa">Formal Description of a
+High-Level FSA</h3>
+<p>We define the automaton as: <span class="math display">\[M = (Q,\,
+\Sigma,\, \delta,\, q_{0/accept},\, F,\, V)\]</span> where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\,
+q_{\text{add\_group}},\, q_{\text{next\_group}}\}\)</span>.</p></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is both the
+start and accept state.</p></li>
+<li><p><span class="math inline">\(F =
+\{q_{0/accept}\}\)</span>.</p></li>
+<li><p><span class="math inline">\(V = \{\text{GroupCounter}(G),\
+\text{Total}(T),\ \text{GroupSize}(S),\
+\text{TotalGroups}(N)\}\)</span>.</p></li>
+</ul>
+<ol>
+<li><p><strong>Initialization:</strong> From <span
+class="math inline">\(q_{0/accept}\)</span>, read <span
+class="math inline">\(S\)</span> and <span
+class="math inline">\(N\)</span>. Set <span
+class="math inline">\(G=0\)</span> and <span
+class="math inline">\(T=0\)</span>, then transition to <span
+class="math inline">\(q_{\text{add\_group}}\)</span>.</p></li>
+<li><p><strong>Add the Group Size:</strong> In <span
+class="math inline">\(q_{\text{add\_group}}\)</span>, add <span
+class="math inline">\(S\)</span> to <span
+class="math inline">\(T\)</span>. (This step uses a chosen addition
+strategy like chunking or rearranging.)</p></li>
+<li><p><strong>Next Group:</strong> If <span class="math inline">\(G
+&lt; N\)</span>, transition to <span
+class="math inline">\(q_{\text{next\_group}}\)</span>, increment <span
+class="math inline">\(G\)</span>, and return to <span
+class="math inline">\(q_{\text{add\_group}}\)</span>. If <span
+class="math inline">\(G = N\)</span>, move back to <span
+class="math inline">\(q_{0/accept}\)</span>.</p></li>
+</ol>
+<h3 class="unnumbered"
+id="automaton-diagram-for-strategic-counting-high-level">Automaton
+Diagram for Strategic Counting (High-Level)</h3>
+<figure>
+
+<figcaption>High-level FSA for Multiplying via Strategic
+Counting</figcaption>
+</figure>
+<h2 class="unnumbered"
+id="two-stack-automaton-2-pda-for-strategic-counting">Two-Stack
+Automaton (2-PDA) for Strategic Counting</h2>
+<p>Rather than a single FSA, we can compose two distinct Pushdown
+Automata:</p>
+<ul>
+<li><p><strong>Sub-PDA<span class="math inline">\(_1\)</span></strong>:
+Manages how many groups are left to process.</p></li>
+<li><p><strong>Sub-PDA<span class="math inline">\(_2\)</span></strong>:
+Implements one of the sophisticated addition strategies for adding the
+group size to the running total.</p></li>
+</ul>
+<p>A single-stack PDA cannot hold both sub-automata memories separately.
+Therefore, we move to a <strong>two-stack automaton</strong> (2-PDA),
+which formally: <span class="math display">\[P_{\times} = (Q_1 \times
+Q_2,\ \Sigma,\ \Gamma_1,\ \Gamma_2,\ \delta_{\times},\ (q_{1,0},
+q_{2,0}),\ F_1 \times F_2).\]</span> Here, <span
+class="math inline">\(\Gamma_1\)</span> is the stack alphabet for the
+group-counting sub-PDA, and <span
+class="math inline">\(\Gamma_2\)</span> is the alphabet for the
+addition-strategy sub-PDA.</p>
+<figure>
+
+<figcaption>Two-Stack Composition for Strategic Counting</figcaption>
+</figure>
+<p><strong>How it Works:</strong></p>
+<ol>
+<li><p><strong>Initialize</strong>: Sub-PDA<span
+class="math inline">\(_1\)</span> stores the total number of groups
+<span class="math inline">\(N\)</span> in Stack<span
+class="math inline">\(_1\)</span>. Sub-PDA<span
+class="math inline">\(_2\)</span> sets up partial sum <span
+class="math inline">\(T=0\)</span> in Stack<span
+class="math inline">\(_2\)</span>.</p></li>
+<li><p><strong>Repeated Addition</strong>:</p>
+<ul>
+<li><p>Sub-PDA<span class="math inline">\(_1\)</span> checks if there is
+another group left (e.g., by decrementing <span
+class="math inline">\(N\)</span>).</p></li>
+<li><p>If yes, it triggers Sub-PDA<span
+class="math inline">\(_2\)</span> to add <span
+class="math inline">\(S\)</span> to <span
+class="math inline">\(T\)</span> using a more advanced approach
+(chunking, rearranging to make bases, etc.).</p></li>
+<li><p>Once Sub-PDA<span class="math inline">\(_2\)</span> completes the
+addition, control goes back to Sub-PDA<span
+class="math inline">\(_1\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Accept</strong>: When Sub-PDA<span
+class="math inline">\(_1\)</span> has processed all groups, the 2-PDA
+enters an accepting pair of states with the final sum in Sub-PDA<span
+class="math inline">\(_2\)</span>.</p></li>
+</ol>
+<h2 class="unnumbered" id="conclusion">Conclusion</h2>
+<ul>
+<li><p><strong>High-Level FSA</strong>: Useful for illustrating repeated
+addition of group sizes without specifying the internal steps of
+addition.</p></li>
+<li><p><strong>Two-Stack Automaton</strong>: A precise way to compose a
+simple group-counting sub-PDA and a more sophisticated sub-PDA for
+strategic addition.</p></li>
+</ul>
+
+</div>
+</details>
 </body>
 </html>

@@ -4,7 +4,6 @@
     <title>Division: Dealing by Ones</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -207,17 +206,234 @@
 
     </script>
 
-        <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-    <script>
-        function openPdfViewer() {
-            // Opens the PDF documentation for the strategy.
-            window.open('./SMR_DIV_Dealing_by_Ones.pdf', '_blank');
-        }
-    </script>
+        
 
 </div> <!-- End Container -->
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<p>This is a sharing division problem. With sharing division problems,
+the number of items in each group is unknown, while the number of groups
+and the total number of items are both known.</p>
+<p><span class="math inline">\(\fbox{Number of groups} \times
+\fbox{Unknown Number of items in each group}  = \fbox{Total number of
+items}\)</span></p>
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Mr. Gomez has 12 cupcakes. He wants to
+put the cupcakes into four boxes, so that there&rsquo;s the same number in
+each box. How many cupcakes can go in each box?</p></li>
+<li><p><strong>Student:</strong> Okay, 1, 2, 3, 4. I got four boxes, 1,
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12. Now, one will go in this box, one
+will go in this box, one will go in this box, one will go in this box.
+Two will go in this box, two will go in this box, two will go in this
+box, two will go in this box. Three will go in this box, three will go
+in this box, three will go in this box, and three, will go in this box.
+Three cupcakes can go in each box.</p></li>
+<li><p><strong>Teacher:</strong> Nice. Thank you, Alex.</p></li>
+</ul>
+<p>Alex began by placing 4 unifix cubes of the same color on the table,
+each one standing in for a different box. He then selected 12 additional
+cubes to represent 12 cupcakes. One by one, he distributed a cube from
+this pile to each box, repeating the process until he had used all the
+cupcake cubes. When he finished, he observed that each box contained 3
+cubes, so the answer is 3 cupcakes per box.</p>
+<h2 class="unnumbered" id="dealing-by-ones">Dealing by Ones</h2>
+<h3 class="unnumbered" id="strategy-overview">Strategy Overview</h3>
+<p><strong>Dealing by Ones</strong> is a foundational division strategy
+where the division is performed by incrementally removing one item at a
+time and counting the number of groups formed. This method is
+particularly useful for simple division problems and serves as the basis
+for more advanced strategies.</p>
+<h3 class="unnumbered" id="automaton-design">Automaton Design</h3>
+<p>We design a <strong>Pushdown Automaton (PDA)</strong> that
+systematically removes one element from the total and increments the
+group count until all elements have been distributed.</p>
+<h3 class="unnumbered" id="automaton-tuple">Automaton Tuple</h3>
+<p>The PDA is defined as the 7-tuple <span class="math display">\[M =
+(Q,\, \Sigma,\, \Gamma,\, \delta,\, q_{0/accept},\, \#,\, F)\]</span>
+where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\,
+q_{\text{remove}},\, q_{\text{output}}\}\)</span> is the set of states.
+Here, <span class="math inline">\(q_{0/accept}\)</span> is the merged
+start and accepting state.</p></li>
+<li><p><span class="math inline">\(\Sigma = \{E\}\)</span> is the input
+alphabet, where <span class="math inline">\(E\)</span> represents an
+element.</p></li>
+<li><p><span class="math inline">\(\Gamma = \{\#, G, E\}\)</span> is the
+stack alphabet:</p>
+<ul>
+<li><p><span class="math inline">\(\#\)</span> is the bottom-of-stack
+marker.</p></li>
+<li><p><span class="math inline">\(G\)</span> represents a group
+identifier.</p></li>
+<li><p><span class="math inline">\(E\)</span> represents an
+element.</p></li>
+</ul></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is the start
+(and accepting) state.</p></li>
+<li><p><span class="math inline">\(\#\)</span> is the initial stack
+symbol.</p></li>
+<li><p><span class="math inline">\(F = \{q_{0/accept}\}\)</span> is the
+set of accepting states.</p></li>
+</ul>
+<h3 class="unnumbered" id="transition-function">Transition Function</h3>
+<p>The key transitions of the PDA are as follows:</p>
+<ol>
+<li><p><strong>Initialization:</strong> <span
+class="math display">\[\delta(q_{0/accept},\, \varepsilon,\,
+\varepsilon) = (q_{\text{remove}},\, \#)\]</span> (Push the bottom
+marker <span class="math inline">\(\#\)</span> and move to the removal
+phase.)</p></li>
+<li><p><strong>Removing Elements:</strong> <span
+class="math display">\[\delta(q_{\text{remove}},\, \varepsilon,\, E) =
+(q_{\text{remove}},\, \varepsilon \text{ (pop } E\text{)}\;
+\text{followed by pushing } G)\]</span> (For each <span
+class="math inline">\(E\)</span> encountered on the stack, pop it and
+push <span class="math inline">\(G\)</span> to record one completed
+group.)</p></li>
+<li><p><strong>Transition when no <span class="math inline">\(E\)</span>
+remains:</strong> <span
+class="math display">\[\delta(q_{\text{remove}},\, \varepsilon,\, \#) =
+(q_{\text{output}},\, \#)\]</span> (When no <span
+class="math inline">\(E\)</span> is left (only the bottom marker
+remains), move to the output phase.)</p></li>
+<li><p><strong>Outputting the Result:</strong> <span
+class="math display">\[\delta(q_{\text{output}},\, \varepsilon,\, x) =
+(q_{0/accept},\, x)\]</span> (Count the number of <span
+class="math inline">\(G\)</span> symbols to determine the quotient;
+output the final count and return to the merged start/accept
+state.)</p></li>
+</ol>
+<h3 class="unnumbered" id="state-transition-table">State Transition
+Table</h3>
+<div class="center">
+<table>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>Current</strong></td>
+<td style="text-align: center;"><strong>Input</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: center;"><strong>Next</strong></td>
+<td style="text-align: center;"><strong>Stack</strong></td>
+<td style="text-align: center;"><strong>Description</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Symbol</strong></td>
+<td style="text-align: center;"><strong>Top</strong></td>
+<td style="text-align: center;"><strong>State</strong></td>
+<td style="text-align: center;"><strong>Operation</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{0/accept}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{remove}}\)</span></td>
+<td style="text-align: center;">Push <span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: center;">Initialization</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{remove}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(E\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{remove}}\)</span></td>
+<td style="text-align: center;">Pop <span
+class="math inline">\(E\)</span>, push <span
+class="math inline">\(G\)</span></td>
+<td style="text-align: center;">Remove one element,</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">increment group count</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{remove}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\#\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;">No change</td>
+<td style="text-align: center;">All <span
+class="math inline">\(E\)</span>&rsquo;s removed</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{output}}\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\varepsilon\)</span></td>
+<td style="text-align: center;">(Any)</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{0/accept}\)</span></td>
+<td style="text-align: center;">Output final count</td>
+<td style="text-align: center;">Output quotient</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(number of <span
+class="math inline">\(G\)</span>&rsquo;s)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 class="unnumbered" id="circular-pda-diagram">Circular PDA
+Diagram</h3>
+<div class="center">
+
+</div>
+<h3 class="unnumbered" id="example-execution">Example Execution</h3>
+<p><strong>Problem:</strong> Divide 7 items into groups of 1.</p>
+<ol>
+<li><p><strong>Start:</strong></p>
+<ul>
+<li><p>Initial Stack: <span class="math inline">\(\#\, E\, E\, E\, E\,
+E\, E\, E\)</span> (7 <span class="math inline">\(E\)</span>&rsquo;s
+representing 7 items).</p></li>
+</ul></li>
+<li><p><strong>Removing Elements:</strong></p>
+<ul>
+<li><p>For each <span class="math inline">\(E\)</span> popped, a <span
+class="math inline">\(G\)</span> is pushed. After 7 removals, the stack
+becomes: <span class="math inline">\(\#\, G\, G\, G\, G\, G\, G\,
+G\)</span>.</p></li>
+</ul></li>
+<li><p><strong>Outputting the Result:</strong></p>
+<ul>
+<li><p>The automaton counts the 7 <span
+class="math inline">\(G\)</span>&rsquo;s and outputs the result (7 groups of
+1).</p></li>
+</ul></li>
+</ol>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

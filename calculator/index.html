@@ -81,30 +81,6 @@
             background-color: #ccc;
         }
 
-        #pdf-button {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            padding: 10px 15px;
-            border: 1px solid #888;
-            border-radius: 5px;
-            background-color: #ffacac; /* A slightly different color */
-            color: #500;
-            cursor: pointer;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), inset 1px 1px 1px #fff, inset -1px -1px 1px #aaa;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        #pdf-button:hover {
-            background-color: #ffc0c0;
-        }
-
-        #pdf-button:active {
-            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
-            background-color: #f09a9a;
-        }
-
     </style>
     <!-- Link Orbitron font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -149,25 +125,9 @@
             <button class="calc-button" onclick="window.location.href='counting.html'">Counting</button>
             <button class="calc-button" onclick="window.location.href='AceofBases/index.html'">Ace of Base</button>
 
-            <!-- Placeholder for empty grid slots if needed, or add more buttons -->
-            <button class="calc-button" onclick="window.location.href='presentation.html'">IMERS 2025 Presentation</button>
-             <button class="calc-button" disabled style="background-color: #b0b0b0; cursor: default; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);"></button>
-
-            
-
-             
         </div>
 
-        <button id="pdf-button" onclick="openPdfDocumentation()">Draft paper: The Hermeneutic Calculator (PDF)</button>
-
     </div>
-
-    <script>
-        function openPdfDocumentation() {
-            // Updated to point to combined_strategies_and_automata.pdf in the same folder
-            window.open('./Hermeneutic_Calculator.pdf', '_blank'); // Opens in a new tab
-        }
-    </script>
 
 </body>
 </html>

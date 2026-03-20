@@ -4,7 +4,6 @@
     <title>Rearranging to Make Bases (RMB) Addition</title>
     <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -415,16 +414,77 @@ document.addEventListener('DOMContentLoaded', function() {
 });
     </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-<script>
-    function openPdfViewer() {
-        // Opens the PDF documentation for the strategy.
-        window.open('https://tiosavich.github.io/UMEDCTA/Calculator/SAR_ADD_RMB.pdf', '_blank');
-    }
-</script>
+    
 
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Video from [Carpenter1999].
+Strategy descriptions and examples adapted from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> Lucy is eight fish. She buys five more
+fish. How many fish will Lucy have then?</p></li>
+<li><p><strong>Sarah:</strong> 13.</p></li>
+<li><p><strong>Teacher:</strong> How&rsquo;d you get 13?</p></li>
+<li><p><strong>Sarah:</strong> Well, because eight plus two is ten, but
+then two plus three is five. And she wants to buy five more fish. So you
+take care of two, and you need to add three more. And so I add three
+more, and you get 13.</p></li>
+</ul>
+
+<p><strong>Notation Representing Sarah&rsquo;s Solution:</strong></p>
+<p><span class="math display">\[\begin{aligned}
+8 + 5 &amp;= \Box \\
+8+2 &amp;= 10\\
+2+3 &amp;= 5\\
+8+5&amp;= 10 + 3\\
+8+5 &amp;= 13
+\end{aligned}\]</span></p>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<p><strong>Objective:</strong> Rearranging to Make Bases (RMB) means
+shifting the extra ones from one addend over to the other so that one of
+the numbers becomes a complete multiple of the base (a whole &ldquo;group&rdquo; of
+that base). This rearrangement simplifies the addition process because
+there are established patterns for adding an exact multiple of the base.
+In other words, when you add a full group of base units to a number, the
+ones digit stays the same while only the digit representing the base
+(like the tens place) increases.</p>
+<h2 class="unnumbered" id="rearranging-to-make-bases-rmb">Rearranging to
+Make Bases (RMB)</h2>
+<h3 class="unnumbered" id="description-of-strategy-1">Description of
+Strategy</h3>
+<ul>
+<li><p><strong>Objective:</strong> Make one of the addends a whole
+number of bases by moving ones from the other addend.</p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(8 +
+5\)</span></p>
+<ul>
+<li><p>Move 2 ones from 5 to 8 to make 10.</p></li>
+<li><p>Remaining ones in the second addend: <span
+class="math inline">\(5 - 2 = 3\)</span>.</p></li>
+<li><p>Add the adjusted numbers: <span class="math inline">\(10 + 3 =
+13\)</span>.</p></li>
+</ul></li>
+</ul>
+<pre><code>--- RMB Execution History (8 + 5) ---
+| State         | Action               | Interpretation                                                   |   A_reg |   B_reg |   K_reg |   A_temp |   B_temp |
+|:--------------|:---------------------|:-----------------------------------------------------------------|--------:|--------:|--------:|---------:|---------:|
+| q_calc_K      | Initialize K calc    | Start counting up from A (8) to Target Base (10).                |       8 |       5 |       0 |        8 |        0 |
+| q_calc_K      | A_temp += 1, K += 1  | Count up: 9. Distance (K): 1.                                    |       8 |       5 |       1 |        9 |        0 |
+| q_calc_K      | A_temp += 1, K += 1  | Count up: 10. Distance (K): 2.                                   |       8 |       5 |       2 |       10 |        0 |
+| q_calc_K      | Reached Target Base  | K needed is 2.                                                   |       8 |       5 |       2 |       10 |        0 |
+| q_decompose_B | Initialize B decomp  | Start counting down K (2) from B (5).                            |       8 |       5 |       2 |       10 |        5 |
+| q_decompose_B | B_temp -= 1, K -= 1  | Transferred 1. B remainder: 4. K remaining: 1.                   |       8 |       5 |       1 |       10 |        4 |
+| q_decompose_B | B_temp -= 1, K -= 1  | Transferred 1. B remainder: 3. K remaining: 0.                   |       8 |       5 |       0 |       10 |        3 |
+| q_decompose_B | Decomp Complete      | Transferred 2. New state: A=10, B=3.                             |      10 |       3 |       0 |       10 |        3 |
+| q_recombine   | Result = A + B       | Combine rearranged numbers: 10 + 3 = 13.                         |      10 |       3 |       0 |       10 |        3 |</code></pre>
+
+</div>
+</details>
 </body>
 </html>

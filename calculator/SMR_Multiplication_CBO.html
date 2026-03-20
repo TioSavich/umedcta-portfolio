@@ -358,14 +358,112 @@
   });
 </script>
 
-    <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
+    
 
-<script>
-  function openPdfViewer() {
-    // Opens the PDF documentation for the strategy.
-    window.open('../SMR_Multiplication_CBO.pdf', '_blank');
-  }
-</script>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered" id="transcript">Transcript</h2>
+<p>Strategy descriptions and examples adapted from <span
+class="citation" data-cites="HackenbergCourseNotes"></span>.</p>
+<ul>
+<li><p><strong>Teacher:</strong> You have 7 mini cans of soda. Each can
+has 9 ounces of soda in it. How many ounces of soda do you have
+total?</p></li>
+<li><p><strong>George:</strong> Well, you could take one of the 9 ounces
+and put an extra ounce into all other cans. That would give you 6 tens
+with 3 ounces leftover. So, 63.</p></li>
+<li><p><strong>Teacher:</strong> Great!</p></li>
+</ul>
+
+<p><span class="math display">\[\begin{aligned}
+    \text{Seven} \times 9 &amp;= \text{Six} \times 9 + 9  \\
+    &amp;=  \text{Six} \times 9 + 6 + 3 \\
+    &amp;= \text{Six}\times (9+1) +3  \\
+    &amp;= \text{Six}\times 10 + 3 \\
+    &amp;=63
+    
+\end{aligned}\]</span></p>
+<p>Begin with groups of a known size. The objective is to form groups
+that equal the base size. To achieve this, break one group apart and
+redistribute its individual units to other groups until they form
+complete bases; repeat with additional groups if necessary. Typically,
+some units will remain ungrouped. The total count is then the sum of the
+complete bases and any leftover units.</p>
+<h2 class="unnumbered" id="conversion-to-bases-and-ones-cbo">Conversion
+to Bases and Ones (CBO)</h2>
+<h3 class="unnumbered" id="description-of-strategy">Description of
+Strategy:</h3>
+<ul>
+<li><p><strong>Objective:</strong> Rearrange the items from groups to
+make complete base units by combining ones from different
+groups.</p></li>
+<li><p><strong>Method:</strong> Break apart groups and redistribute ones
+to form full base units (e.g., tens).</p></li>
+</ul>
+<h3 class="unnumbered" id="automaton-type">Automaton Type:</h3>
+<p><strong>Pushdown Automaton (PDA)</strong>: The stack is used to
+represent the redistribution of ones in order to form complete base
+units.</p>
+<h3 class="unnumbered" id="formal-description-of-the-automaton">Formal
+Description of the Automaton</h3>
+<p>We define the PDA as the 7-tuple <span class="math display">\[M =
+(Q,\, \Sigma,\, \Gamma,\, \delta,\, q_{0/accept},\, Z_0,\, F)\]</span>
+where:</p>
+<ul>
+<li><p><span class="math inline">\(Q = \{q_{0/accept},\,
+q_{\text{collect}},\, q_{\text{form}}\}\)</span> is the set of states.
+Here, <span class="math inline">\(q_{0/accept}\)</span> serves as both
+the start and accept state.</p></li>
+<li><p><span class="math inline">\(\Sigma\)</span> is the input alphabet
+(encoding the group information, e.g., number of groups and ones per
+group).</p></li>
+<li><p><span class="math inline">\(\Gamma = \{Z_0\} \cup \{1\}\)</span>
+is the stack alphabet, where <span class="math inline">\(Z_0\)</span> is
+the initial stack symbol and the symbol <span
+class="math inline">\(1\)</span> represents a single one.</p></li>
+<li><p><span class="math inline">\(q_{0/accept}\)</span> is the start
+state, which is also the accept state.</p></li>
+<li><p><span class="math inline">\(F = \{q_{0/accept}\}\)</span> is the
+set of accepting states.</p></li>
+</ul>
+<p>The transition function <span class="math inline">\(\delta\)</span>
+is defined by:</p>
+<ol>
+<li><p><span class="math inline">\(\delta(q_{0/accept},\,
+\text{``init&#39;&#39;},\, Z_0) = \{(q_{\text{collect}},\,
+Z_0)\}\)</span><br />
+(Initialize the process to collect ones from the groups.)</p></li>
+<li><p>In state <span class="math inline">\(q_{\text{collect}}\)</span>:
+<span class="math inline">\(\delta(q_{\text{collect}},\, \varepsilon,\,
+x) = \{(q_{\text{collect}},\, 1x)\}\)</span> for any <span
+class="math inline">\(x \in \Gamma\)</span><br />
+(For each group, push the ones (e.g., <span
+class="math inline">\(S\)</span> ones) onto the stack.)<br />
+Additionally, when all groups have been processed (i.e. a designated
+input symbol signals that the count of groups equals <span
+class="math inline">\(N\)</span>), we have: <span
+class="math inline">\(\delta(q_{\text{collect}},\, \varepsilon,\, Z_0) =
+\{(q_{\text{form}},\, Z_0)\}\)</span>.</p></li>
+<li><p>In state <span class="math inline">\(q_{\text{form}}\)</span>:
+<span class="math inline">\(\delta(q_{\text{form}},\, \varepsilon,\, 1)
+= \{(q_{\text{form}},\, \varepsilon)\}\)</span> (simulate popping a one)
+repeated until fewer than <span class="math inline">\(BSize\)</span>
+symbols remain on the stack. When fewer than <span
+class="math inline">\(BSize\)</span> ones remain (i.e., a full base unit
+cannot be formed), <span class="math inline">\(\delta(q_{\text{form}},\,
+\varepsilon,\, Z_0) = \{(q_{0/accept},\, Z_0)\}\)</span><br />
+(Output the final result, which is implicitly represented by the
+distribution of ones on the stack.)</p></li>
+</ol>
+<h3 class="unnumbered"
+id="automaton-diagram-for-conversion-to-bases-and-ones">Automaton
+Diagram for Conversion to Bases and Ones</h3>
+<h3 class="unnumbered" id="html-implementation">HTML Implementation</h3>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>

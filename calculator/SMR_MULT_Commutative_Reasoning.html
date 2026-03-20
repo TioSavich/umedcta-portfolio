@@ -4,7 +4,6 @@
     <title>Commutative Multiplication</title>
 <link rel="stylesheet" href="strategy_styles.css">
     <!-- MathJax for mathematical notation -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -29,14 +28,7 @@
         <!-- Output will be displayed here -->
     </div>
 
-        <button class="pdf-button" class="pdf-button" onclick="openPdfViewer()">📄 Learn More: View Detailed PDF Documentation</button>
-
-    <script>
-        function openPdfViewer() {
-            // Opens the PDF documentation for the strategy.
-            window.open('./SMR_MULT_COMMUTATIVE_REASONING.pdf', '_blank');
-        }
-    </script>
+        
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -118,5 +110,254 @@
     </script>
 </div>
 
+<details class="formal-treatment">
+<summary>Formal treatment</summary>
+<div class="formal-content">
+<h2 class="unnumbered"
+id="commutative-action-for-multiplication">Commutative Action for
+Multiplication</h2>
+<p>Imagine a situation where we have six chocolate chip cookies with 4
+chocolate chips in each cookie. That&rsquo;s 24 chocolate chips. Instead, we
+imagine we have four chocolate chip cookies, and each cookie has 6
+chocolate chips. That&rsquo;s still 24 chocolate chips, but not enough cookies
+to feed 4 kids! The commutative property of multiplication,</p>
+<ul>
+<li><p><strong>Definition:</strong> For any two natural numbers <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>, <span class="math display">\[a \times
+b = b \times a.\]</span></p></li>
+<li><p><strong>Example:</strong> <span class="math inline">\(3 \times 4
+= 4 \times 3\)</span>.</p></li>
+</ul>
+<p>is fine for purely abstract mathematical contexts, but in <em>equal
+groups multiplication problems</em> &ndash; the sort of problems that most
+people encounter when learning about multiplication for the first time &ndash;
+the order of the factors can make a big difference.</p>
+<p>However, there is a big difference between recognizing the
+commutative property holds for the number of chocolate chips and the
+fact that you would have two crying kids if there were 6 kids and you
+only had 4 cookies.</p>
+<p>For equal groups multiplication:</p>
+<p><span class="math display">\[\fbox{\text{number of groups}} \times
+\fbox{\text{number of items in each group}} = \fbox{\text{total number
+of items}}\]</span></p>
+<p>To act (or reason) commutatively, the number of items in a group
+needs to be repackaged as the number of groups, while the number of
+groups transforms into the number of items in each group.</p>
+<h3 class="unnumbered" id="definition-and-example">Definition and
+Example</h3>
+<p>Imagine this situation, from <span class="citation"
+data-cites="HackenbergCourseNotes"></span>: we have ten packages of
+rainbow flavored candies, and each package contains the 7 candies, one
+of each of the &lsquo;colors of the rainbow&rsquo;: red, orange, yellow, green,
+blue, indigo, and violet.</p>
+<p>It can be hard to count 7 objects ten times. <span
+class="math inline">\(7+7+7+7+7+7+7+7+7+7\)</span> is a lot of work! We
+can <em>repackage</em> the candies into seven packages of 10 candies
+each - all the reds together, all the oranges together, and so on. The
+result is seven 10s, which is a lot easier to count: <span
+class="math inline">\(10+10+10+10+10+10+10=70\)</span>.</p>
+
+<h2 class="unnumbered" id="objective-of-the-automaton">Objective of the
+Automaton</h2>
+<ul>
+<li><p><strong>Input:</strong> A multiplication expression <span
+class="math inline">\(a \times b\)</span>.</p></li>
+<li><p><strong>Output:</strong> The transformed expression <span
+class="math inline">\(b \times a\)</span>.</p></li>
+<li><p><strong>Functionality:</strong> Recognize when a multiplication
+expression is presented and apply the commutative property to reorder
+the operands.</p></li>
+</ul>
+<h2 class="unnumbered" id="automaton-type-selection">Automaton Type
+Selection</h2>
+<h3 class="unnumbered" id="finite-state-transducer-fst">Finite State
+Transducer (FST)</h3>
+<ul>
+<li><p><strong>Transduction Capability:</strong> Unlike finite state
+automata (FSA) that merely recognize languages, an FST can transform
+input strings into output strings.</p></li>
+<li><p><strong>Suitability:</strong> Ideal for tasks involving
+input-output transformations, such as repackaging operands in a
+multiplication expression.</p></li>
+</ul>
+<h2 class="unnumbered"
+id="designing-the-fst-for-commutative-reasoning">Designing the FST for
+Commutative Reasoning</h2>
+<h3 class="unnumbered" id="components-of-the-fst">Components of the
+FST</h3>
+<ol>
+<li><p><strong>States (<span
+class="math inline">\(Q\)</span>)</strong>:</p>
+<ul>
+<li><p><span class="math inline">\(q_0\)</span>: Start state.</p></li>
+<li><p><span class="math inline">\(q_1\)</span>: Reading the first
+operand.</p></li>
+<li><p><span class="math inline">\(q_2\)</span>: Reading the
+multiplication symbol (<span
+class="math inline">\(\times\)</span>).</p></li>
+<li><p><span class="math inline">\(q_3\)</span>: Reading the second
+operand.</p></li>
+<li><p><span class="math inline">\(q_4\)</span>: Applying the
+commutative transformation.</p></li>
+<li><p><span class="math inline">\(q_{\text{accept}}\)</span>: Accepting
+state; transformation complete.</p></li>
+</ul></li>
+<li><p><strong>Input Alphabet (<span
+class="math inline">\(\Sigma\)</span>)</strong>:</p>
+<ul>
+<li><p>Digits: <span
+class="math inline">\(\{0,1,2,3,4,5,6,7,8,9\}\)</span></p></li>
+<li><p>Multiplication symbol: <span
+class="math inline">\(\times\)</span></p></li>
+</ul></li>
+<li><p><strong>Output Alphabet (<span
+class="math inline">\(\Delta\)</span>)</strong>:</p>
+<ul>
+<li><p>Digits: <span
+class="math inline">\(\{0,1,2,3,4,5,6,7,8,9\}\)</span></p></li>
+<li><p>Multiplication symbol: <span
+class="math inline">\(\times\)</span></p></li>
+</ul></li>
+<li><p><strong>Transition Function (<span
+class="math inline">\(\delta\)</span>)</strong>: Defines how the FST
+transitions between states based on input symbols and produces
+corresponding output symbols.</p></li>
+<li><p><strong>Start State:</strong> <span
+class="math inline">\(q_0\)</span></p></li>
+<li><p><strong>Accepting State:</strong> <span
+class="math inline">\(q_{\text{accept}}\)</span></p></li>
+</ol>
+<h3 class="unnumbered"
+id="transition-function-details-single-digit-operands">Transition
+Function Details (Single-Digit Operands)</h3>
+<p>For simplicity, assume operands are single digits. The FST behaves as
+follows:</p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"><strong>Current State</strong></th>
+<th style="text-align: center;"><strong>Input Symbol</strong></th>
+<th style="text-align: center;"><strong>Read Symbol</strong></th>
+<th style="text-align: center;"><strong>Next State</strong></th>
+<th style="text-align: center;"><strong>Output Symbol</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_0\)</span></td>
+<td style="text-align: center;">Any digit <span
+class="math inline">\(d_1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(d_1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(d_1\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_1\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\times\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\times\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_2\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(\times\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_2\)</span></td>
+<td style="text-align: center;">Any digit <span
+class="math inline">\(d_2\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(d_2\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(q_3\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(d_2\)</span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_3\)</span></td>
+<td style="text-align: center;">End of input</td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_4\)</span></td>
+<td style="text-align: center;">&mdash;</td>
+</tr>
+<tr>
+<td style="text-align: center;"><span
+class="math inline">\(q_4\)</span></td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;">&mdash;</td>
+<td style="text-align: center;"><span
+class="math inline">\(q_{\text{accept}}\)</span></td>
+<td style="text-align: center;">Output repackaged</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">expression: <span
+class="math inline">\(d_2 \times d_1\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 class="unnumbered" id="automaton-diagrams">Automaton Diagrams</h2>
+<h3 class="unnumbered"
+id="circular-diagram-for-single-digit-operands">Circular Diagram for
+Single-Digit Operands</h3>
+<p>Below is the circular state diagram for the FST (with the start and
+accept states merged) for single-digit operands.</p>
+<h3 class="unnumbered"
+id="circular-diagram-for-multi-digit-operands">Circular Diagram for
+Multi-Digit Operands</h3>
+<p>For multi-digit operands, the FST buffers digits until the entire
+operand is read, then repackages the operands. The following circular
+diagram represents an enhanced FST:</p>
+<h2 class="unnumbered" id="example-execution">Example Execution</h2>
+<h3 class="unnumbered" id="problem">Problem:</h3>
+<p><span class="math inline">\(3 \times 4\)</span></p>
+<h3 class="unnumbered" id="execution-steps">Execution Steps:</h3>
+<ol>
+<li><p><strong><span class="math inline">\(q_0\)</span></strong>: Reads
+the digit &lsquo;3&rsquo;, outputs &lsquo;3&rsquo;, then moves to <span
+class="math inline">\(q_1\)</span>.</p></li>
+<li><p><strong><span class="math inline">\(q_1\)</span></strong>: Reads
+&lsquo;<span class="math inline">\(\times\)</span>&rsquo;, outputs &lsquo;<span
+class="math inline">\(\times\)</span>&rsquo;, then moves to <span
+class="math inline">\(q_2\)</span>.</p></li>
+<li><p><strong><span class="math inline">\(q_2\)</span></strong>: Reads
+the digit &lsquo;4&rsquo;, outputs &lsquo;4&rsquo;, then moves to <span
+class="math inline">\(q_3\)</span>.</p></li>
+<li><p><strong><span class="math inline">\(q_3\)</span></strong>: End of
+input is detected; transition to <span
+class="math inline">\(q_4\)</span>.</p></li>
+<li><p><strong><span class="math inline">\(q_4\)</span></strong>:
+Repackages the operands to produce &lsquo;4 <span
+class="math inline">\(\times\)</span> 3&rsquo;, and transitions back to <span
+class="math inline">\(q_{0/accept}\)</span> (accepting state).</p></li>
+</ol>
+<h3 class="unnumbered" id="output">Output:</h3>
+<p><span class="math inline">\(4 \times 3\)</span></p>
+<h2 class="unnumbered" id="conclusion">Conclusion</h2>
+<p>By designing this Finite State Transducer (FST), we effectively model
+the commutative property of multiplication as a transformation process.
+The single-digit version demonstrates the basic concept, while the
+multi-digit version shows how the automaton can be extended to handle
+more complex expressions by buffering entire operands before applying
+the repackage.</p>
+<h2 class="unnumbered" id="html-implementation">HTML Implementation</h2>
+<pre class="html" style="htmlStyle" data-language="html"><code></code></pre>
+
+</div>
+</details>
 </body>
 </html>
