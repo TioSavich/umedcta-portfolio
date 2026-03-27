@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.isStable) {
                 this.statusEl.textContent = 'Stable - ' + currentOutput;
                 // Trigger matrix growth on catastrophe
-                if (snapped && !wasStable) {
+                if (snapped) {
                     const now = Date.now();
                     if (now - this._lastGrow > 500) {
                         this._lastGrow = now;
