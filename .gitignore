@@ -1,4 +1,23 @@
 .DS_Store
 .gstack/
 .claude/
-calculator/Tex/
+
+# Adobe Illustrator files
+*.ai
+
+# LaTeX aux files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.tex
+
+# Scraps folder
+calculator/scraps/
