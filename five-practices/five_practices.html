@@ -614,6 +614,18 @@
 
 <body>
 
+  <!-- Onboarding overlay -->
+  <div id="onboarding" style="position:fixed;inset:0;z-index:100;background:rgba(7,13,26,0.92);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
+    <div style="max-width:480px;padding:2.5rem;text-align:center;">
+      <p style="font-size:0.82rem;margin-bottom:1.5rem;"><a href="../index.html" style="color:#7986a3;text-decoration:none;">← Portfolio</a></p>
+      <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:0.5rem;color:#e8eaf6;">Five Practices for Productive Math Discussions</h1>
+      <p style="color:#7986a3;font-size:0.88rem;margin-bottom:1.5rem;">Smith, Bill, &amp; Sherin (2019)</p>
+      <p style="color:#c8cce0;font-size:0.95rem;line-height:1.7;margin-bottom:1rem;">Four students solved 83 &minus; 69. Each used a different strategy. The colored spheres are the students; the gold star is the lesson goal. The lines between them are inferential connections — questions a teacher might ask to help one student recognize their thinking in another's work.</p>
+      <p style="color:#c8cce0;font-size:0.95rem;line-height:1.7;margin-bottom:1.5rem;">Use the <strong>Next</strong> button to walk through the five practices. Click any student sphere to see their work and practice distinguishing <em>assessing</em> questions (drawing out thinking) from <em>advancing</em> questions (pressing toward the goal).</p>
+      <button onclick="document.getElementById('onboarding').style.display='none'" style="font-family:'Inter',sans-serif;font-size:0.95rem;font-weight:600;background:linear-gradient(135deg,#5bc4f5,#3a8fd4);color:#fff;border:none;border-radius:100px;padding:0.7rem 2rem;cursor:pointer;box-shadow:0 4px 20px rgba(91,196,245,0.4);">Enter the classroom</button>
+    </div>
+  </div>
+
   <canvas id="starfield"></canvas>
   <svg id="canvas"></svg>
 

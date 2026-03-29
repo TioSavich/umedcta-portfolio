@@ -8,15 +8,17 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f12;
-      --surface: #17171d;
-      --border: #2a2a35;
-      --text: #d4d4d8;
-      --muted: #71717a;
-      --accent: #a78bfa;
-      --accent-dim: #7c3aed22;
-      --link: #c4b5fd;
-      --link-hover: #ede9fe;
+      --bg: #110f08;
+      --surface: #1a1710;
+      --border: #3a3428;
+      --text: #d4cfc0;
+      --muted: #8a8470;
+      --accent: #e8a84c;
+      --accent-dim: #e8a84c15;
+      --link: #e0c88a;
+      --link-hover: #f0ead8;
+      --cite-bg: #1c1a12;
+      --cite-border: #3a3428;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,7 +57,7 @@
     h1 {
       font-size: 2rem;
       font-weight: 600;
-      color: #fafafa;
+      color: #f0ead8;
       line-height: 1.3;
       margin-bottom: 0.5rem;
     }
@@ -92,7 +94,7 @@
     }
 
     .framing p {
-      color: #b4b4be;
+      color: #b8b0a0;
       font-style: italic;
     }
 
@@ -166,6 +168,151 @@
       border-left: 1px solid var(--border);
       line-height: 1.5;
     }
+
+    /* --- Citation toggle system --- */
+    #cite-toggle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      margin-top: 0.75rem;
+    }
+
+    #cite-toggle:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    body.show-citations #cite-toggle {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Citation elements — hidden by default */
+    .cite {
+      display: none;
+    }
+
+    body.show-citations .cite {
+      display: block;
+    }
+
+    body.show-citations .cite-inline {
+      display: inline;
+    }
+
+    /* Inline citation references */
+    .cite-inline {
+      display: none;
+      font-size: 0.82em;
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* Block citation annotations */
+    .cite-note {
+      background: var(--cite-bg);
+      border: 1px solid var(--cite-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      margin: 0.75rem 0 1.25rem;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #a0987a;
+    }
+
+    .cite-note .cite-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .cite-note em {
+      color: #b8b0a0;
+    }
+
+    /* Block quotation within citation notes */
+    .cite-quote {
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+      margin: 0.6rem 0;
+      font-style: italic;
+      color: #b8b0a0;
+    }
+
+    /* References section */
+    .references {
+      margin-top: 3rem;
+    }
+
+    .references h2 {
+      margin-top: 2rem;
+    }
+
+    .ref-list {
+      list-style: none;
+      padding: 0;
+      font-size: 0.85rem;
+      color: #a0987a;
+      line-height: 1.6;
+    }
+
+    .ref-list li {
+      margin-bottom: 0.9rem;
+      padding-left: 2rem;
+      text-indent: -2rem;
+    }
+
+    .ref-list .ref-key {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+
+    /* --- AI Disclosure section --- */
+    .disclosure {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .disclosure h2 {
+      margin-top: 1rem;
+    }
+
+    .disclosure p {
+      font-size: 0.92rem;
+    }
+
+    .disclosure blockquote {
+      border-left: 2px solid var(--accent);
+      padding-left: 1.2rem;
+      margin: 1.25rem 0;
+      font-style: italic;
+      color: #b8b0a0;
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    .disclosure blockquote cite {
+      display: block;
+      margin-top: 0.4rem;
+      font-style: normal;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
   </style>
   <link rel="stylesheet" href="shared/glossary.css">
 </head>
@@ -175,39 +322,63 @@
     <p class="site-title">UMEDCTA &mdash; Tio Savich</p>
     <h1>Understanding Mathematics as an Emancipatory Discipline: A Critical Theory Approach</h1>
     <p class="subtitle">Interactive tools companion to the manuscript <em>UMEDCTA</em></p>
+    <button id="cite-toggle" onclick="document.body.classList.toggle('show-citations')">
+      Show scholarly apparatus
+    </button>
   </header>
 
   <section>
-    <p>These are experiments in breaking. Each page models something — a reasoning strategy, a physical system, a logical typology — and each is designed to be pushed until the model stops working. That stopping point is not incidental. The central argument of the accompanying manuscript is that formalisms productively exceed themselves when applied consistently: the breakdown is where the interesting philosophy begins.</p>
+
+    <div style="float:right; width:180px; margin:0 0 1.25rem 1.5rem;">
+      <img src="prelude_Grover.jpeg" alt="Four panels from The Monster at the End of This Book: Grover begs you not to turn the page, then discovers the monster at the end is just himself." style="width:100%;border-radius:6px;border:1px solid var(--border);">
+      <p style="font-size:0.72rem;color:var(--muted);margin-top:0.35rem;line-height:1.4;"><em>I, lovable, furry old Grover, am the Monster at the end of this book.</em></p>
+    </div>
+
+    <p>These are experiments in breaking. Each page models something — a reasoning strategy, a physical system, a logical typology — and each is designed to be pushed until the model stops working. That stopping point is not incidental. The central argument of the accompanying manuscript is that formalisms productively exceed themselves when applied consistently: the breakdown is where the interesting philosophy begins.<span class="cite cite-inline"> (Savich, unpublished; cf. Brandom, 2019, Ch. 2)</span></p>
+
+    <div class="cite cite-note">
+      <span class="cite-label">Source</span>
+      The claim that formalisms "productively exceed themselves" is the central thesis of Savich's unpublished manuscript <em>UMEDCTA</em>. The philosophical precedent is Brandom's reading of Hegel's <em>Introduction</em> to the <em>Phenomenology</em>, where error is not failure but the mechanism by which consciousness becomes more determinate: "to be conceptually contentful is to stand in relations of material incompatibility ('determinate negation') and material consequence ('mediation') to other such contentful items" (Brandom, 2019, Ch. 2, "Representation and the Experience of Error").
+    </div>
 
     <div class="framing">
       <p>The modeling is honest about what it leaves out. A Prolog formalization of a child's arithmetic strategy is not a theory of mathematical cognition; a Zeeman catastrophe machine running in a browser is not a metaphysics of embodied compression. What these tools do: make it possible to notice where the formalization stops — and what that stopping tells you about what the formalism was actually doing.</p>
     </div>
 
-    <p>The tools accompany a manuscript rooted in Robert Brandom's <span class="g" data-term="analytic-pragmatism">analytic pragmatism</span>, Hegel's dialectics of <span class="g" data-term="determinate-negation">determinate negation</span>, and Phil Carspecken's <span class="g" data-term="critical-ethnography">critical ethnography</span>. The Prolog and Python formalization work is not included here; that material is research in progress, and claiming it "works" in any philosophically significant sense would be premature.</p>
+    <p>Grover spends the whole book terrified of the monster at the end. He builds walls, begs you to stop turning pages. The monster turns out to be him. The fear was never about the monster — it was about the gap between the <em>I</em> who acts and the <em>me</em> who is recognized by others. That gap is where misrecognition lives: when who you are for yourself finds no reflection in who you are for the people around you. Grover's recognition does not happen alone. It requires the reader — you, turning the page over his protests — as a co-constitutor of what he discovers about himself. These tools ask you to do something similar.</p>
+
+    <p>The tools accompany a manuscript rooted in Robert Brandom's <span class="g" data-term="analytic-pragmatism">analytic pragmatism</span><span class="cite cite-inline"> (Brandom, 2000)</span>, Hegel's dialectics of <span class="g" data-term="determinate-negation">determinate negation</span><span class="cite cite-inline"> (Brandom, 2019, Ch. 5)</span>, and Phil Carspecken's <span class="g" data-term="critical-ethnography">critical ethnography</span><span class="cite cite-inline"> (Carspecken, 1995)</span>. The Prolog and Python formalization work is not included here; that material is research in progress, and claiming it "works" in any philosophically significant sense would be premature.</p>
 
     <p>The tools below are arranged roughly in developmental order — from embodied judgment, through counting and number, to the geometry of difference and the structure of classroom discourse. The paradoxes encountered along the way are the "built to break" moments.</p>
   </section>
 
   <h2>Embodiment and Memory</h2>
   <div class="tool-list">
-    <a class="tool-card" href="more-zeeman/index_unified.html">
+    <a class="tool-card" href="more-zeeman/index.html">
       <div class="tool-name">The More Machine</div>
-      <div class="tool-desc">A model of the Zeeman catastrophe machine — a physical device with two elastic bands attached to a rotating disc, where the control point can be dragged into a region where the disc snaps discontinuously between two stable positions. In the manuscript's appendix, the machine serves as a model for embodied compression and relaxation: the moment before a snap, the system is in a superimposed state; after, it has resolved — but the resolution carries information about the path. The "sound of time" visualizer registers angular velocity as acoustic displacement, so you can hear the snap. The matrix automaton in the corner grows by Cantorian diagonalization each time a catastrophe occurs.</div>
+      <div class="tool-desc">A Zeeman catastrophe machine with two elastic bands pulling a rotating disc. Drag the control point — or just watch — until the disc snaps between stable states. Each snap produces a judgment (M or W), recorded on an unrolling tape. The matrix grows by Cantor's diagonal operation — the same m-and-w flipping from his 1891 proof — applied to the machine's own history. Like McMonkey McBean's Star-On, Star-Off machine: the flipping never stops, and the categories eventually dissolve. The springs are ideal — they do not remember being stretched. That gap between formal record and material memory is where the model stops working, on purpose.</div>
     </a>
   </div>
-  <p class="breadcrumb">The snap produces a countable moment — a judgment the system records. From here, counting.</p>
+  <div class="cite cite-note">
+    <span class="cite-label">Sources</span>
+    The catastrophe machine is due to Zeeman (1976). The specific mathematical formulation follows Poston &amp; Stewart (2012). The matrix performs Cantor's 1891 diagonal operation using Cantor's original characters, <em>m</em> and <em>w</em>: each new row negates the diagonal of the existing matrix. In Cantor's proof, this demonstrates that any enumeration of infinite binary sequences is necessarily incomplete. Here, the same operation is applied to a finite, embodied machine — the proof becomes a <em>process</em> of self-reflection generating novelty, not a static demonstration of uncountability. The manuscript's Bridge chapter, "A Foundational Star," connects this to Dr. Seuss's Sneetches: McMonkey McBean's Star-On/Star-Off machine performs the same flipping operation, churning the Sneetches through until the rigid categories dissolve into the sublated recognition that "Sneetches are Sneetches" (Savich, unpublished, UMEDCTA, Bridge chapter).
+  </div>
+  <p class="breadcrumb">Each snap is an act of counting — continuous experience compressed into a discrete judgment. When a child counts "one, two, three," each number is the same catastrophe at a different scale. And when "many ones" suddenly reorganize into "one ten," that is sublation. From here, counting.</p>
 
   <h2>Counting and Number</h2>
   <div class="tool-list">
     <a class="tool-card" href="calculator/index.html">
       <div class="tool-name">The Hermeneutic Calculator</div>
-      <div class="tool-desc">Each button opens a page modeling one formal reasoning strategy from research on children's arithmetic. The strategies are drawn from Susan Jo Russell's work: addition, subtraction, multiplication, and division. The formalization makes explicit what a child's reasoning procedure commits to inferentially — and where those commitments run out. For those building AI in mathematics education: this is what an AI tutoring system currently lacks — the inferential structure of a child's procedure, made explicit enough to break.</div>
+      <div class="tool-desc">Each button opens a page modeling one formal reasoning strategy from research on children's arithmetic<span class="cite cite-inline"> (Carpenter et al., 2015)</span> — not as opaque symbolic shortcuts, but as written choreographies for embodied cognition. The formalization reveals a fractal architecture: a minimal iterative core (counting by ones) nested inside a supervisory strategic shell (like calculating the gap to the next ten). The formalization makes explicit what a child's reasoning procedure commits to inferentially — and where those commitments run out. For those building AI in mathematics education: this is what an AI tutoring system currently lacks.</div>
     </a>
     <a class="tool-card" href="calculator/AceofBases/index.html">
       <div class="tool-name">Ace of Bases</div>
       <div class="tool-desc">A base system explorer. Counting commits you to a base system, but the choice of base is entirely normative — it could have been otherwise. This tool makes that contingency available for examination. Generalizing across bases encounters the paradox of the one and the many: the same quantity, held differently.</div>
     </a>
+  </div>
+  <div class="cite cite-note">
+    <span class="cite-label">Sources</span>
+    The modeling of children's arithmetic strategies as formal automata is developed in Savich (unpublished, UMEDCTA). The strategies themselves draw on the Cognitively Guided Instruction tradition (Carpenter, Fennema, Franke, Levi, &amp; Empson, 2015). The description of counting as normatively committed follows from Brandom's account of concept use as the undertaking of inferential commitments (Brandom, 1994, Ch. 3).
   </div>
   <p class="breadcrumb">Counting and shapes share a problem: how do things differ, and what follows from their difference?</p>
 
@@ -215,20 +386,24 @@
   <div class="tool-list">
     <a class="tool-card" href="ten-differences/difference_v2.html">
       <div class="tool-name">Ten Types of Difference</div>
-      <div class="tool-desc">An interactive guide to Brandom's reading of Hegel's <em>Perception</em> chapter. Ten logical structures of difference, rendered through geometry and equity examples. The geometry is not a metaphor for the logic — it instantiates the same <span class="g" data-term="material-inference">inferential relations</span>. The equity framing came from a class on pluralism where geometric examples worked where political ones did not.</div>
+      <div class="tool-desc">An interactive guide to Brandom's reading of Hegel's <em>Perception</em> chapter.<span class="cite cite-inline"> (Brandom, 2019, Ch. 5)</span> Ten logical structures of difference, rendered through geometry and equity examples. A square is simultaneously an "Also" (a medium hosting compatible properties — it is red, it is plastic) and a "One" (a unit repelling incompatible properties — it cannot be triangular). The geometry is not a metaphor for the logic — it instantiates the same <span class="g" data-term="material-inference">inferential relations</span>. The equity framing came from a class on pluralism where geometric examples worked where political ones did not.</div>
     </a>
     <a class="tool-card" href="quadrilateral-sub/inferential_strength.html">
       <div class="tool-name">Quadrilateral Substitution</div>
-      <div class="tool-desc">A worked demonstration of Brandom's <span class="g" data-term="substitution-inference">substitution inference</span> in Chapter 4 of <em>Articulating Reasons</em>, using quadrilaterals. Substitution inference — the move from "this is a square" to "this is a rectangle" — turns out to require inferential commitment, not just conceptual inclusion. The geometry makes the commitment structure available to examination.</div>
+      <div class="tool-desc">A worked demonstration of Brandom's <span class="g" data-term="substitution-inference">substitution inference</span> in Chapter 4 of <em>Articulating Reasons</em><span class="cite cite-inline"> (Brandom, 2000)</span>, using quadrilaterals. Substitution inference — the move from "this is a square" to "this is a rectangle" — turns out to require inferential commitment, not just conceptual inclusion. Under negation, the inferential polarity inverts: the simple hierarchy dissolves into a fractal network. The geometry makes the commitment structure available for examination — and reveals that mathematical units function not as names for static objects, but as pronouns that recollect the "I think" of the practitioner.</div>
     </a>
   </div>
-  <p class="breadcrumb">Relaxing exclusive differences lets shapes be inside each other — <span class="g" data-term="sublation">sublated</span>. This opens the space for connecting what students know.</p>
+  <div class="cite cite-note">
+    <span class="cite-label">Sources</span>
+    Brandom's analysis of the <em>Perception</em> chapter appears in <em>A Spirit of Trust</em>, Chapter 5: "Understanding the Object/Property Structure in Terms of Negation" (Brandom, 2019). The key Hegelian concepts at work — determinateness, negation, mediation, and universality — follow the Spinozist principle <em>Omnis determinatio est negatio</em> (all determination is negation): "being determinate requires some limitation, contrast, or exclusion" (Brandom, 2019, Ch. 5). The substitution inference argument is from <em>Articulating Reasons</em>, Chapter 4 (Brandom, 2000).
+  </div>
+  <p class="breadcrumb">Relaxing the strict negations that define a square does not destroy it — the concept deforms into neighboring predicates (rectangle, rhombus), carrying its developmental history within it. That geometric <span class="g" data-term="sublation">sublation</span> is the same structure that lets a teacher connect one student's thinking to another's.</p>
 
   <h2>The Classroom</h2>
   <div class="tool-list">
     <a class="tool-card" href="five-practices/five_practices.html">
       <div class="tool-name">Five Practices for Productive Math Discussions</div>
-      <div class="tool-desc">An interactive demonstration of the Smith &amp; Stein pedagogical framework — anticipating, monitoring, selecting, sequencing, and connecting student thinking. The tool is designed to help teacher candidates recognize the framework's inferential logic, not to train them in it.</div>
+      <div class="tool-desc">An interactive demonstration of the Smith &amp; Stein pedagogical framework<span class="cite cite-inline"> (Smith, Bill, &amp; Sherin, 2019)</span> — anticipating, monitoring, selecting, sequencing, and connecting student thinking. The tool is designed to help teacher candidates recognize the framework's inferential logic, not to train them in it.</div>
     </a>
     <a class="tool-card" href="ai-framework/classroom_web.html">
       <div class="tool-name">The Classroom Web</div>
@@ -241,13 +416,60 @@
   <div class="tool-list">
     <a class="tool-card" href="ai-framework/framework.html">
       <div class="tool-name">A Framework for AI in Education</div>
-      <div class="tool-desc">Three modes of AI use in classroom settings — distinguished by whether AI takes a role in the conversation or produces content for students to engage with. The framework draws on Habermas's distinction between <span class="g" data-term="communicative-action">communicative</span> and <span class="g" data-term="strategic-action">strategic action</span>. The framework describes a teacher's options, not a theory of learning.</div>
+      <div class="tool-desc">Three modes of AI use in classroom settings — distinguished by whether AI takes a role in the conversation or produces content for students to engage with. The framework draws on Habermas's distinction between <span class="g" data-term="communicative-action">communicative</span> and <span class="g" data-term="strategic-action">strategic action</span>.<span class="cite cite-inline"> (Habermas, 1992, Ch. 4; 1984)</span> The framework describes a teacher's options, not a theory of learning.</div>
     </a>
     <a class="tool-card" href="ai-framework/on_friction_and_ai.html">
       <div class="tool-name">On Friction and AI</div>
-      <div class="tool-desc">An essay on what productive difficulty does in learning, and what AI removes when it removes difficulty. Built through conversation with AI; the ideas are the author's, the implementation is not. The essay describes how this was made and what that process can and cannot mean for questions of authorship.</div>
+      <div class="tool-desc">An essay on what productive difficulty does in learning, and what AI removes when it removes difficulty. Clench your fist: your hand is full of itself and cannot grasp anything else. Release the clench — not all the way, just enough. Now there is room. That rhythm of compression and expansion is what friction produces, and what AI bypasses. The concept draws on Brandom's account of the "experience of error" — the process by which commitments become more determinate through encountering incompatibility.<span class="cite cite-inline"> (Brandom, 2019, Ch. 2)</span> Built through conversation with AI; the ideas are the author's, the implementation is not.</div>
     </a>
   </div>
+  <div class="cite cite-note">
+    <span class="cite-label">Sources</span>
+    The strategic/communicative distinction is from Habermas, <em>Postmetaphysical Thinking</em>, Ch. 4, Section III: "Speech Acts, Communicative Action, and Strategic Interaction" (Habermas, 1992). Habermas distinguishes types of interaction by "whether the actions of different actors are coordinated by way of 'reaching an understanding' or 'exerting influence'" (Habermas, 1992, Ch. 4). The fuller development of communicative action theory appears in <em>The Theory of Communicative Action</em>, Vol. 1 (Habermas, 1984).
+    <br><br>
+    The connection between friction and the "experience of error" draws on Brandom's Chapter 2 of <em>A Spirit of Trust</em>, "Representation and the Experience of Error," where error is the mechanism by which consciousness becomes more determinate — not a deficiency but a constitutive feature of knowledge (Brandom, 2019).
+  </div>
+
+  <!-- AI Disclosure -->
+  <section class="disclosure">
+    <h2>On the Use of Generative AI</h2>
+
+    <p>In the interest of transparency consistent with the IU School of Education Generative AI Framework (IU SoE AI Guidance Committee, 2025), this portfolio was built by Savich with substantial assistance from generative AI (Claude Opus 4.6 via GitHub Copilot; in some cases Google Gemini). The ideas, philosophical framework, and editorial judgment are Savich's; approximately 90% of the specific sentences were generated through conversation with AI systems. This is disclosed in detail on the <a href="ai-framework/framework.html#how-this-was-made" style="color: var(--link); text-decoration: none; border-bottom: 1px solid var(--link);">framework page</a>.</p>
+
+    <p>From Savich's developing framework on AI in education (unpublished), this use case is <strong>strategic</strong> (Mode 1). Habermas's strategic action is interaction oriented purely toward success, where an actor seeks to influence others, treating them as means to an end. The point of building a portfolio is to be hired. Such uses are existentially fraught. They risk readers sensing manipulation and the purported author being misrecognized as more (or less) capable than they are.</p>
+
+    <div class="cite cite-note">
+      <span class="cite-label">Habermas on strategic and communicative uses of language</span>
+      <div class="cite-quote">
+        The use of language that is manifestly strategic has a derivative status as well; in this case all participants are aware that reaching understanding in language is subordinated to conditions of strategic action — and therefore remains deficient. They know and reckon with the fact that they must supplement the illocutionarily mediated perlocutionary effects of their speech acts with purposively triggered empirical effects. That is, in the end they still rely upon indirect communication: only the proverbial shot before the bow is able to demonstrate the seriousness of a threat to the opponent. This case of the manifestly strategic use of language is to be distinguished in turn from cases of an indirect communication that remains subordinated to the aim of communicative action. In unstructured initial situations, the common definition of the situation is first constructed (for example, in an accidental meeting in a bar) when a young man indirectly implies something to a young woman. In the same way, the pedagogically careful teacher instills self-confidence in his pupil through compliments, so that the pupil learns to take his own ideas seriously. In cases such as these, in which communicative action has first of all to establish its own presuppositions step by step, the <em>terminus ad quern</em> is an agreement that is ultimately also available for communication and not a perlocutionary effect that would be destroyed by being admitted or declared.
+      </div>
+      <cite>Habermas, <em>Postmetaphysical Thinking</em>, Ch. 4, trans. Hohengarten (Polity, 1992), p. 106 (ebook)</cite>
+    </div>
+
+    <p>Generative AI is, at this moment of technical development, intrinsically manipulative in Habermas's sense. Its architecture uses transducing automata (stimulus/response) to link inputs, responses, and rewards in ways that mimic communicative action — but without the ability to raise or redeem validity claims. In actions oriented toward mutual understanding, actors' communicative acts function as promises to one another. Those promises hold existential and embodied stakes. Without the ability to enact regret — the real-time doxastic updating that happens when you notice your words did not land — the machines generate text fluidly, with no fear of being misunderstood.</p>
+
+    <p>With no socially inhibitory mechanisms, the interactions between a human and an AI tool can function as narcissistic pools: the author perceives themselves reflected as fearless and fluent. The invulnerable image risks AI users falling into its depths, a process now named AI-induced psychosis. When others read those communiques, they may sense the psychosis, feel the manipulation, or recognize the apparent depth as the shallow puddle of the LLM's context window.</p>
+
+    <p>The contradictions these uses enact are deeply problematic. However, Hegelian theorists may recognize such contradictions as potential sites for dialectical growth. Whether the tendencies of AI use to isolate, drive to psychosis, disintegrate the productive friction we call "curricula," and dissolve the promissory notes that bind people in recognitive communities can be <span class="g" data-term="sublation">sublated</span> — that is the research question this work attempts to hold open rather than resolve.</p>
+  </section>
+
+  <!-- References (visible only when citations are toggled) -->
+  <section class="cite references">
+    <h2>References</h2>
+    <ul class="ref-list">
+      <li><span class="ref-key">[Brandom, 1994]</span> Brandom, R. B. (1994). <em>Making It Explicit: Reasoning, Representing, and Discursive Commitment</em>. Harvard University Press.</li>
+      <li><span class="ref-key">[Brandom, 2000]</span> Brandom, R. B. (2000). <em>Articulating Reasons: An Introduction to Inferentialism</em>. Harvard University Press.</li>
+      <li><span class="ref-key">[Brandom, 2019]</span> Brandom, R. B. (2019). <em>A Spirit of Trust: A Reading of Hegel's Phenomenology</em>. The Belknap Press of Harvard University Press.</li>
+      <li><span class="ref-key">[Carpenter et al., 2015]</span> Carpenter, T. P., Fennema, E., Franke, M. L., Levi, L., &amp; Empson, S. B. (2015). <em>Children's Mathematics: Cognitively Guided Instruction</em> (2nd ed.). Heinemann/NCTM.</li>
+      <li><span class="ref-key">[Carspecken, 1995]</span> Carspecken, P. F. (1995). <em>Critical Ethnography in Educational Research: A Theoretical and Practical Guide</em>. Routledge.</li>
+      <li><span class="ref-key">[Habermas, 1984]</span> Habermas, J. (1984). <em>The Theory of Communicative Action, Volume 1: Reason and the Rationalization of Society</em>. Trans. T. McCarthy. Beacon Press.</li>
+      <li><span class="ref-key">[Habermas, 1992]</span> Habermas, J. (1992). <em>Postmetaphysical Thinking: Philosophical Essays</em>. Trans. W. M. Hohengarten. Polity Press. [Originally published 1988 as <em>Nachmetaphysisches Denken</em>.]</li>
+      <li><span class="ref-key">[Poston &amp; Stewart, 2012]</span> Poston, T. &amp; Stewart, I. (2012). <em>Catastrophe Theory and Its Applications</em>. Dover Publications.</li>
+      <li><span class="ref-key">[Savich, unpublished]</span> Savich, T. M. (unpublished). <em>Understanding Mathematics as an Emancipatory Discipline: A Critical Theory Approach</em>. Manuscript in preparation.</li>
+      <li><span class="ref-key">[Smith et al., 2019]</span> Smith, M. S., Bill, V., &amp; Sherin, M. G. (2019). <em>The Five Practices in Practice [Elementary]: Successfully Orchestrating Mathematics Discussions in Your Elementary Classroom</em>. Corwin.</li>
+      <li><span class="ref-key">[Zeeman, 1976]</span> Zeeman, E. C. (1976). Catastrophe theory. <em>Scientific American</em>, 234(4), 65–83.</li>
+    </ul>
+  </section>
 
   <footer>
     <p>Tio Savich &mdash; <a href="https://recognitionstudies.org">recognitionstudies.org</a></p>
@@ -255,5 +477,13 @@
   </footer>
 
   <script src="shared/glossary.js"></script>
+  <script>
+    // Update toggle button text based on state
+    document.getElementById('cite-toggle').addEventListener('click', function () {
+      this.textContent = document.body.classList.contains('show-citations')
+        ? 'Hide scholarly apparatus'
+        : 'Show scholarly apparatus';
+    });
+  </script>
 </body>
 </html>

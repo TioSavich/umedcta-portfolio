@@ -8,15 +8,15 @@
   <style>
     :root {
       --text: #1a1a1a;
-      --muted: #555;
-      --bg: #fafaf8;
-      --border: #ccc;
+      --muted: #6b6050;
+      --bg: #faf8f0;
+      --border: #c9c0a8;
       --accent: #8b0000;
       --blue: #2c5282;
       --green: #276749;
       --gold: #8b6914;
       --purple: #553c9a;
-      --callout-bg: #f0ede4;
+      --callout-bg: #f5f0e2;
       --callout-border: #c9c4b5;
       --strategic-bg: #f0f4e8;
       --strategic-border: #7c9a3e;
@@ -104,8 +104,13 @@
       margin: 2em 0;
     }
 
-    /* Callout: theoretical depth */
+    /* Callout: theoretical depth — hidden by default, toggled via button */
     .callout {
+      display: none;
+    }
+
+    body.show-citations .callout {
+      display: block;
       background: var(--callout-bg);
       border: 1px solid var(--callout-border);
       border-left: 4px solid #8b6914;
@@ -295,9 +300,12 @@
 
 <body>
 
+  <p style="font-size:0.85em;margin-bottom:1em;"><a href="../index.html">&larr; Portfolio</a></p>
+
   <h1>A Framework for AI in Education</h1>
   <p class="subtitle">Theodore M. Savich — February 2026<br>
     Three modes of AI use, grounded in inferentialism and the phenomenology of learning.</p>
+  <button id="cite-toggle" onclick="document.body.classList.toggle('show-citations')" style="font-family:Georgia,serif;font-size:0.82rem;background:#f5f0e2;color:#6b6050;border:1px solid #c9c0a8;border-radius:4px;padding:0.35rem 0.8rem;cursor:pointer;margin-top:0.5rem;">Show scholarly depth</button>
 
   <div class="epigraph">
     <p>"The art of a good question is not to demand an answer, but to open a space where the student discovers they
@@ -337,7 +345,7 @@
   <div class="callout">
     <span class="callout-label">Theoretical depth</span>
     The implicit web reflects a commitment to <em>inferentialism</em> — the account, developed by Robert Brandom reading
-    Hegel, that concepts get their meaning not by pointing at objects but through patterns of inference, compatibility,
+    Hegel (Brandom, <em>Making It Explicit</em>, 1994; <em>A Spirit of Trust</em>, 2019), that concepts get their meaning not by pointing at objects but through patterns of inference, compatibility,
     and incompatibility. A concept is defined as much by what it <em>rules out</em> as by what it <em>includes</em>. In
     this framework, the connections between students' mathematical strategies are not analogies or comparisons — they
     are <em>material inferences</em>: if you understand what Jocelyn's crossed-out tens mean, you are committed to
@@ -348,17 +356,23 @@
 
   <h2>Two kinds of action, two roles for AI</h2>
 
-  <p>The philosopher Jürgen Habermas distinguishes between two fundamentally different structures of human action:</p>
+  <p>The philosopher Jürgen Habermas distinguishes between two fundamentally different structures of human action
+    (<em>Postmetaphysical Thinking</em>, Ch. 4, 1992; <em>The Theory of Communicative Action</em>, Vol. 1, 1984):</p>
 
   <p><strong>Strategic action</strong> is goal-directed. It aims at efficiency. Success is measured by whether you
     achieved the outcome. Writing a report, fixing a broken link, generating a quiz from a set of readings — these are
-    strategic. The question that governs strategic action is: <em>Did it work?</em></p>
+    strategic. The question that governs strategic action is: <em>Did it work?</em> Habermas characterizes types of
+    interaction by "whether the actions of different actors are coordinated by way of 'reaching an understanding' or
+    'exerting influence'" (1992, Ch. 4). Strategic action coordinates through influence.</p>
 
   <p><strong>Communicative action</strong> is oriented toward mutual understanding. Success is measured by whether the
     participants come to share reasons — not just conclusions, but the inferential paths that make those conclusions
     intelligible. A classroom discussion where students connect their strategies to each other's, a writing conference
     where a student discovers what they were really trying to say, a seminar where a reading suddenly clicks — these are
-    communicative. The question that governs communicative action is: <em>Do we understand each other?</em></p>
+    communicative. The question that governs communicative action is: <em>Do we understand each other?</em> Communicative
+    action "distinguishes itself from strategic action through the fact that successful action coordination is not traced
+    back to the purposive rationality of action orientations but to the rationally motivating force of achieving
+    understanding" (Habermas, 1992, Ch. 4).</p>
 
   <p>AI is extraordinarily good at strategic action. It is not built for communicative action — not because it lacks
     processing power, but because communicative action requires something AI cannot do: <em>risk being wrong in a way
@@ -368,7 +382,8 @@
     <span class="callout-label">Theoretical depth</span>
     Habermas identifies three <em>validity claims</em> raised in any communicative act: that the statement is
     <strong>true</strong> (it corresponds to something in the objective world), <strong>sincere</strong> (the speaker
-    means what they say), and <strong>normatively appropriate</strong> (it accords with shared values).
+    means what they say), and <strong>normatively appropriate</strong> (it accords with shared values)
+    (<em>Postmetaphysical Thinking</em>, Ch. 4; <em>Theory of Communicative Action</em>, Vol. 1, Ch. 3).
     Comprehensibility is not a fourth claim but the precondition — the assumption of communicative competence that makes
     intersubjectivity, and therefore any validity claim, possible in the first place. Every answer to a question about
     meaning, identity, or understanding is potentially deficient on one of these axes. The incompleteness is structural
@@ -419,12 +434,21 @@
 
   <div class="callout">
     <span class="callout-label">Theoretical depth</span>
-    Strategic action corresponds to what Habermas calls <em>purposive-rational action</em>. It is governed by technical
+    Strategic action corresponds to what Habermas calls <em>purposive-rational action</em> (1984, Vol. 1). It is governed by technical
     rules and evaluated by success. The distinguishing feature is that the validity of the action does not depend on
     mutual understanding — it depends on whether the outcome was achieved. AI excels here because the questions are
     closed: the answer either fixed the link or it didn't. No performative contradiction is possible because the action
     is not self-referential. <a href="on_friction_and_ai.html">On Friction and AI</a> develops the full argument about
     digital drudgery vs. productive friction.
+    <br><br>
+    Habermas distinguishes manifestly strategic language use from indirect communication that remains "subordinated to
+    the aim of communicative action." His example: "the pedagogically careful teacher instills self-confidence in his
+    pupil through compliments, so that the pupil learns to take his own ideas seriously." In such cases, the
+    <em>terminus ad quern</em> is "an agreement that is ultimately also available for communication and not a
+    perlocutionary effect that would be destroyed by being admitted or declared" (<em>Postmetaphysical Thinking</em>,
+    1992, Ch. 4, p. 106). This distinction matters for AI: strategic uses of AI in classrooms (Mode 1) are legitimate
+    when the participants are aware of the strategic orientation. The danger is latent strategic action — interaction
+    that <em>appears</em> communicative but is oriented purely toward success.
   </div>
 
   <!-- ─── MODE 2 ─── -->
@@ -448,8 +472,8 @@
   <div class="callout">
     <span class="callout-label">Theoretical depth</span>
     Assessing questions correspond to Habermas's claim that communicative action begins with <em>understanding the
-      other's position on its own terms</em>. In Smith &amp; Stein's <em>Five Practices for Orchestrating Productive
-      Mathematics Discussions</em>, this is <strong>Practice 2: Monitoring</strong> — specifically the assessing
+      other's position on its own terms</em> (1992, Ch. 4). In Smith &amp; Stein's <em>Five Practices for Orchestrating Productive
+      Mathematics Discussions</em> (Smith, Bill, &amp; Sherin, 2019), this is <strong>Practice 2: Monitoring</strong> — specifically the assessing
     sub-practice, where the teacher circulates and draws out student thinking without advancing it. The AI's role here
     is analogous to what the Hermeneutic Calculator does computationally: model student strategies as formal objects so
     that their internal logic becomes tractable. The <a href="../five-practices/five_practices.html">Five Practices
@@ -479,7 +503,7 @@
   <div class="callout">
     <span class="callout-label">Theoretical depth</span>
     Connecting questions make implicit material inferences <em>explicit</em> — they are the mechanism by which the faint
-    lines in the web above become manifest. In Brandom's inferentialism, to understand a concept is to grasp the web of
+    lines in the web above become manifest. In Brandom's inferentialism (1994; 2000), to understand a concept is to grasp the web of
     commitments and entitlements it carries. When a student recognizes that Jocelyn's crossed-out tens and DuJuan's
     backward jumps are two expressions of the same mathematical structure, they have not just learned a fact — they have
     entered a space of reasons. This is the Hegelian "reciprocal recognition" applied to mathematical thinking: each
@@ -572,7 +596,7 @@
   <div class="callout">
     <span class="callout-label">Theoretical depth</span>
     The distinction between having an answer and having the <em>authority</em> to act on it tracks what Brandom
-    identifies in Kant as two dimensions of apperception. The <em>synthetic unity of apperception</em> is the capacity
+    identifies in Kant as two dimensions of apperception (<em>A Spirit of Trust</em>, 2019, Ch. 2). The <em>synthetic unity of apperception</em> is the capacity
     to bind experiences into a judgment that is critical (it rules things out), ampliative (it adds something new), and
     justificatory (it can be defended with reasons). This is the cognitive side — the "aha." The <em>transcendental
       unity of apperception</em> is something deeper: the unity of the self that persists through those judgments, the
@@ -800,6 +824,28 @@
 
   <p class="closing">Whether naming the contradiction is sufficient, or whether the honest move is always to go back and
     walk the trail by hand, remains open. It is, in fact, the question.</p>
+
+  <div class="links" style="margin-top: 4em;">
+    <h2>References</h2>
+    <ul style="list-style: none; padding: 0; font-size: 0.85em; line-height: 1.65; color: var(--muted);">
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Brandom, R. B. (1994). <em>Making It Explicit: Reasoning, Representing, and Discursive Commitment</em>. Harvard University Press.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Brandom, R. B. (2000). <em>Articulating Reasons: An Introduction to Inferentialism</em>. Harvard University Press.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Brandom, R. B. (2019). <em>A Spirit of Trust: A Reading of Hegel's Phenomenology</em>. The Belknap Press of Harvard University Press.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Carspecken, P. F. (1995). <em>Critical Ethnography in Educational Research: A Theoretical and Practical Guide</em>. Routledge.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Habermas, J. (1984). <em>The Theory of Communicative Action, Volume 1: Reason and the Rationalization of Society</em>. Trans. T. McCarthy. Beacon Press.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Habermas, J. (1992). <em>Postmetaphysical Thinking: Philosophical Essays</em>. Trans. W. M. Hohengarten. Polity Press.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Savich, T. M. (unpublished). <em>Understanding Mathematics as an Emancipatory Discipline: A Critical Theory Approach</em>. Manuscript in preparation.</li>
+      <li style="margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em;">Smith, M. S., Bill, V., &amp; Sherin, M. G. (2019). <em>The Five Practices in Practice [Elementary]</em>. Corwin.</li>
+    </ul>
+  </div>
+
+  <script>
+    document.getElementById('cite-toggle').addEventListener('click', function () {
+      this.textContent = document.body.classList.contains('show-citations')
+        ? 'Hide scholarly depth'
+        : 'Show scholarly depth';
+    });
+  </script>
 
 </body>
 
