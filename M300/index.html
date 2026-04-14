@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Documentary Synthesis Discussion</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:#f8f7f4;color:#1a1a1a;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:4rem;
+}
+header{text-align:center;padding:1.25rem 1rem .75rem;border-bottom:1px solid #e0ddd5}
+header h1{font-size:1.35rem;font-weight:700;letter-spacing:-.02em}
+header p{font-size:.82rem;color:#777;margin-top:.15rem}
+
+/* Graph */
+.graph-wrap{display:flex;flex-direction:column;align-items:center;padding:.75rem .5rem .25rem}
+.film-graph{width:100%;max-width:420px;touch-action:manipulation}
+.node{cursor:pointer}
+.node circle.bg{fill:transparent;stroke:transparent}
+.node circle.vis{stroke-width:2.5;fill:#f8f7f4;transition:fill .2s,stroke .2s}
+.node.selected circle.vis{fill:var(--c);stroke:var(--c)}
+.node text.label{font-size:11px;text-anchor:middle;fill:#555;font-weight:600;pointer-events:none;transition:fill .2s}
+.node.selected text.label{fill:#fff}
+.node text.name{font-size:10px;text-anchor:middle;fill:#444;font-weight:500;pointer-events:none}
+.edge{stroke:#d8d4cc;stroke-width:1.5;opacity:0;transition:opacity .3s,stroke .25s}
+.edge.active{opacity:1;stroke:#888;stroke-width:2.5}
+.sel-status{font-size:.8rem;color:#888;margin-top:.25rem;min-height:1.2em;text-align:center}
+.clear-btn{
+  margin-top:.35rem;padding:.3rem .9rem;font-size:.75rem;
+  background:transparent;border:1px solid #ccc;border-radius:4px;color:#777;cursor:pointer;
+  display:none;
+}
+.clear-btn.show{display:inline-block}
+
+/* Phase steps */
+.phase-bar{
+  display:flex;justify-content:center;gap:.25rem;padding:.5rem 1rem;
+  max-width:480px;margin:0 auto;
+}
+.phase-step{
+  font-size:.7rem;font-weight:600;padding:.25rem .6rem;border-radius:12px;
+  background:#eae7e0;color:#999;transition:background .25s,color .25s;
+}
+.phase-step.active{background:#3d5a80;color:#fff}
+
+/* Content */
+.content-area{padding:.5rem 1rem 1rem;max-width:640px;margin:0 auto}
+.card{
+  background:#fff;border-radius:8px;padding:1.15rem 1.1rem;margin-bottom:.85rem;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);border-left:4px solid var(--accent,#ccc);
+  animation:fadeUp .3s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card h3{font-size:.95rem;margin-bottom:.4rem;line-height:1.3}
+.card .theme{font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:#888;margin-bottom:.35rem}
+.card p,.card li{font-size:.88rem;color:#333;line-height:1.55}
+.card ul{list-style:none;padding:0}
+.card ul li{padding:.4rem 0;border-bottom:1px solid #f0ede6}
+.card ul li:last-child{border:none}
+.card ul li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent,#ccc);margin-right:.5rem;vertical-align:middle}
+blockquote{
+  border-left:3px solid #d0cbc0;padding:.4rem 0 .4rem .85rem;margin:.65rem 0;
+  font-style:italic;color:#555;font-size:.84rem;
+}
+blockquote .attr{display:block;font-style:normal;font-weight:600;margin-top:.15rem;font-size:.78rem;color:#666}
+.readings{margin-top:.7rem;padding-top:.5rem;border-top:1px solid #f0ede6}
+.readings h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.03em;color:#999;margin-bottom:.3rem}
+.readings p{font-size:.8rem;color:#666;line-height:1.5}
+.synopsis{font-size:.84rem;color:#555;margin-bottom:.5rem;line-height:1.55}
+
+/* Expandable */
+details{margin-bottom:.85rem}
+details summary{
+  cursor:pointer;font-weight:600;font-size:.9rem;padding:.6rem 0;
+  list-style:none;display:flex;align-items:center;gap:.4rem;
+}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"";display:inline-block;width:0;height:0;border-left:5px solid #888;border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .2s}
+details[open] summary::before{transform:rotate(90deg)}
+
+/* Algorithm section */
+.algo-section{
+  max-width:640px;margin:1.5rem auto 0;padding:0 1rem;
+}
+.algo-section .card{border-left-color:#b8a88a}
+.algo-section h2{font-size:1.05rem;margin-bottom:.5rem}
+.algo-section h4{font-size:.88rem;margin:.6rem 0 .2rem;color:#3d5a80}
+.algo-section ol{padding-left:1.2rem;margin:.3rem 0}
+.algo-section ol li{font-size:.86rem;color:#444;padding:.2rem 0}
+.algo-questions{margin-top:.75rem;padding-top:.5rem;border-top:1px solid #f0ede6}
+.algo-questions li{font-size:.85rem;color:#555}
+
+/* Empty state */
+.empty{text-align:center;padding:2rem 1rem;color:#aaa;font-size:.88rem;line-height:1.6}
+
+/* Pair sub-cards inside triple view */
+.sub-card{
+  background:#faf9f6;border-radius:6px;padding:.85rem;margin-bottom:.6rem;
+  border-left:3px solid #d8d4cc;
+}
+.sub-card h4{font-size:.85rem;margin-bottom:.25rem}
+.sub-card p{font-size:.84rem;color:#444}
+
+@media(min-width:768px){
+  header h1{font-size:1.7rem}
+  .film-graph{max-width:480px}
+  .card{padding:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Documentary Synthesis</h1>
+<p>Tap the films you watched (up to 3)</p>
+</header>
+
+<div class="graph-wrap">
+<svg class="film-graph" viewBox="0 0 460 420" aria-label="Film connection graph">
+  <g id="edges"></g>
+  <g id="nodes"></g>
+</svg>
+<div class="sel-status" id="status"></div>
+<button class="clear-btn" id="clearBtn" onclick="clearAll()">Clear selection</button>
+</div>
+
+<div class="phase-bar">
+  <span class="phase-step" id="ph1">Individual</span>
+  <span class="phase-step" id="ph2">Pairs</span>
+  <span class="phase-step" id="ph3">Synthesis</span>
+</div>
+
+<div class="content-area" id="content"></div>
+
+<div class="algo-section" id="algo"></div>
+
+<script>
+// ─── FILM DATA ───
+const FILMS = {
+  thirteenth: {
+    id:'thirteenth', name:'13th', color:'#3d5a80',
+    pos:{x:230,y:60},
+    svgLabel:['13th'],
+    synopsis:'Directed by Ava DuVernay, 13th traces how the "exception clause" in the Thirteenth Amendment\u2014which abolished slavery except as punishment for crime\u2014created a constitutional mechanism for racial control that evolved from convict leasing to Jim Crow to the War on Drugs to mass incarceration. The U.S. has 5% of the world\u2019s population and 25% of its prisoners.',
+    questions:[
+      'What image or moment from this film has stayed with you?',
+      'The film argues the prison system is "operating exactly as designed." What does that phrase mean, and did you find it convincing?',
+      'What was one thing you learned that you hadn\u2019t known before watching?'
+    ],
+    quote:{text:'That\u2019s what, really, this Black Lives Matter moment is about. This question of whose life do we recognize as valuable?',by:'Jelani Cobb'},
+    readings:'Young, "Five Faces of Oppression" (Cultural Imperialism) \u00B7 Adams et al., Institutional Oppression (Readings for Diversity and Social Justice) \u00B7 Omi & Winant, Racial Formation \u00B7 Love, "Developing a Liberatory Consciousness"'
+  },
+  crip_camp: {
+    id:'crip_camp', name:'Crip Camp', color:'#c47a2b',
+    pos:{x:109,y:130},
+    svgLabel:['Crip Camp'],
+    synopsis:'Crip Camp traces the disability rights movement from Camp Jened\u2014a ramshackle summer camp in the Catskills where disabled teenagers experienced community and autonomy for the first time\u2014to the historic 1977 Section 504 sit-in in San Francisco, where activists occupied a federal building for 25 days and won. The camp\u2019s spirit of liberation became the foundation for the Americans with Disabilities Act.',
+    questions:[
+      'What struck you about the atmosphere at Camp Jened? What made it different from the "outside world"?',
+      'Judy Heumann says, "If I have to feel thankful about an accessible bathroom, when am I ever gonna be equal?" What is she getting at?',
+      'Did this film change how you think about disability? How?'
+    ],
+    quote:{text:'You can\u2019t imagine what the 504 sit-in was like. It was camp. Everything we learned at Camp Jened was what we did there.',by:'Corbett O\u2019Toole'},
+    readings:'Young, "Five Faces of Oppression" (Cultural Imperialism) \u00B7 Love, "Developing a Liberatory Consciousness" \u00B7 Freire, Praxis (reflection + action) \u00B7 Tregoning, Ableism and Language (Readings for Diversity and Social Justice, Section 6) \u00B7 Collins & Bilge, Intersectionality'
+  },
+  mask: {
+    id:'mask', name:'The Mask You Live In', color:'#5a7a6b',
+    pos:{x:109,y:280},
+    svgLabel:['The Mask You','Live In'],
+    synopsis:'The Mask You Live In examines how American culture\u2019s narrow definition of masculinity harms boys and men. From early childhood, boys are socialized to suppress emotion, perform toughness, and define manhood through athletic dominance, economic success, and sexual conquest. The film traces how this "mask" leads to isolation, depression, substance abuse, and violence\u2014and concludes with a workshop where young men finally take the mask off.',
+    questions:[
+      'When was the first time someone told you (or you heard someone told) to "be a man" or "man up"? What was the context?',
+      'The film claims masculinity is "reactive, not organic." What does that mean?',
+      'Was there a moment in the film that felt uncomfortably familiar?'
+    ],
+    quote:{text:'We set boys up to grow into men who disrespect women at a fundamental level and then we wonder why we have the culture that we have.',by:'Expert interview'},
+    readings:'Harro, "Cycle of Socialization" \u00B7 Johnson, "Patriarchy, the System" \u00B7 Lorber, "Night to His Day: The Social Construction of Gender" \u00B7 Katz, Violence Against Women as a Men\u2019s Issue \u00B7 Chapman, "Gender Bias in Education"'
+  },
+  oyler: {
+    id:'oyler', name:'Oyler', color:'#a07040',
+    pos:{x:230,y:350},
+    svgLabel:['Oyler'],
+    synopsis:'Oyler documents one year at the Oyler School in Lower Price Hill, Cincinnati\u2014a community learning center serving a predominantly poor white Appalachian neighborhood devastated by job loss and addiction. Principal Craig Hockenberry fights to keep his job after the state labels Oyler a "Priority School" based on test scores, while seniors Raven and Crystal navigate poverty, family responsibility, and the dream of college.',
+    questions:[
+      'What did you notice about the neighborhood around the school? What role does that context play?',
+      'Principal Hockenberry says he treated the kids "as if they were the last flower in the garden." What does that kind of care look like in a school, and is it sustainable?',
+      'The state fires Hockenberry based on test scores. Was that the right call?'
+    ],
+    quote:{text:'I firmly believe that attacking the poverty is the most important thing that we do.',by:'Joe Saylor, Teacher'},
+    readings:'Gorski, "The Myth of the Culture of Poverty" \u00B7 Adams et al., Oppression Levels: Individual, Institutional, Societal \u00B7 Collins & Bilge, Intersectionality \u00B7 Haberman, "The Pedagogy of Poverty versus Good Teaching"'
+  },
+  precious_knowledge: {
+    id:'precious_knowledge', name:'Precious Knowledge', color:'#a84e55',
+    pos:{x:351,y:280},
+    svgLabel:['Precious','Knowledge'],
+    synopsis:'Precious Knowledge documents the political battle over the Mexican American Studies program at Tucson High School. With a 93% graduation rate (vs. the 48% national average for Mexican American students), the program was a measurable success\u2014but Arizona politicians labeled it "anti-American" and passed a law banning it. The film follows teachers and students as they fight to keep a curriculum that reflects their history.',
+    questions:[
+      'Why did the Mexican American Studies program work so well for students? What was different about those classes?',
+      'Tom Horne calls the program "anti-American." What is he actually afraid of?',
+      'A student says, "The American culture has an outline for every single one of us, and that is an oppression." What does she mean?'
+    ],
+    quote:{text:'Paulo Freire said you have to teach students to read the word and read the world. And in order to make change, you have to look at the structure, the institution.',by:'Curtis Acosta, Teacher'},
+    readings:'Gorski, "Stages of Multicultural Curriculum Transformation" \u00B7 Freire, Critical Pedagogy and the "Banking Model" \u00B7 Gorski, Deficit Perspective \u00B7 Harro, "Cycle of Liberation"'
+  },
+  teach_us_all: {
+    id:'teach_us_all', name:'Teach Us All', color:'#6b4f8a',
+    pos:{x:351,y:130},
+    svgLabel:['Teach Us All'],
+    synopsis:'Teach Us All examines educational inequity by juxtaposing the 1957 Little Rock Central High School crisis with the present-day reality of schools like the Bronx Academy of Letters\u2014located in the poorest congressional district in the country. The film argues that de facto segregation persists, and follows students organizing to fight for the resources and representation they\u2019re denied.',
+    questions:[
+      'The film argues we\u2019ve gone "full circle" back to segregation. Do you agree?',
+      'What connects the Little Rock Nine to students in the Bronx today?',
+      '"We\u2019re talking about one million human beings with incredible potential, agency and intelligence, and we\u2019re not speaking to them." Who is the "we" in that sentence?'
+    ],
+    quote:{text:'When school desegregation happened in the \u201960s, there was a little bit more commitment to the idea that an injustice to one is an injustice to all. We would do well to remember that.',by:'Educator'},
+    readings:'McIntosh, "White Privilege: Unpacking the Invisible Knapsack" \u00B7 Gorski, Equity Literacy framework \u00B7 Bell, "Understanding Adultism" \u00B7 Haberman, "The Pedagogy of Poverty" \u00B7 Harro, "Cycle of Liberation"'
+  }
+};
+
+// ─── PAIR DATA (15) ───
+const PAIRS = {
+'crip_camp+thirteenth':{
+  theme:'Criminalization vs. Invisibility',
+  prompt:'13th shows Black bodies being hyper-visible\u2014surveilled, policed, incarcerated. Crip Camp shows disabled bodies being rendered invisible\u2014institutionalized, hidden from public life. Are hyper-visibility and invisibility two sides of the same coin? How does each film argue that the dominant group controls who gets seen and how?',
+  readings:'Young, "Five Faces of Oppression" \u00B7 Adams et al., Cultural Imperialism'
+},
+'mask+thirteenth':{
+  theme:'Media as Weapon',
+  prompt:'Both films argue that media constructs dangerous cultural scripts. 13th traces the "mythology of Black criminality" from Birth of a Nation to the "superpredator" label. The Mask You Live In traces the glorification of violent masculinity through Hollywood, video games, and pornography. How does media function as a tool of socialization in both films? Who benefits from these scripts?',
+  readings:'Young, Cultural Imperialism \u00B7 Katz, Violence as a Men\u2019s Issue \u00B7 Harro, Cycle of Socialization'
+},
+'oyler+thirteenth':{
+  theme:'The Economic Engine',
+  prompt:'13th exposes the Prison Industrial Complex\u2014ALEC, private prisons, the commodification of bodies. Oyler exposes an "economic desert" where poverty is the constant backdrop to education. How does capitalism function as a mechanism of oppression in both narratives? When Hockenberry fights to keep his job and DuVernay follows the money to Corrections Corporation of America, are they pointing at the same system?',
+  readings:'Gorski, "The Myth of the Culture of Poverty" \u00B7 Adams et al., Institutional Oppression'
+},
+'precious_knowledge+thirteenth':{
+  theme:'The Dangerous Label',
+  prompt:'In 13th, the label "criminal" or "superpredator" is used to control Black bodies physically. In Precious Knowledge, the label "anti-American" is used to control Latinx minds intellectually. How are these labeling strategies similar in their goals? What does the dominant group gain by criminalizing resistance in both cases?',
+  readings:'Love, "Developing a Liberatory Consciousness" \u00B7 Harro, Cycle of Socialization \u00B7 Gorski, Deficit Perspective'
+},
+'teach_us_all+thirteenth':{
+  theme:'History as Argument',
+  prompt:'Both films use historical narrative to argue that present conditions are not accidental. 13th traces the line from the Thirteenth Amendment\u2019s loophole to mass incarceration. Teach Us All traces the line from Little Rock 1957 to the Bronx today. Why is it important for these filmmakers to start with history? What would the argument lose without it?',
+  readings:'McIntosh, White Privilege \u00B7 Oliver & Shapiro, "Race, Wealth, and Equality"'
+},
+'crip_camp+mask':{
+  theme:'The Body as Battleground',
+  prompt:'Both films are about what happens when society imposes a narrow definition on a body. Disabled bodies are "de-gendered" and treated as objects of pity. Male bodies are forced into a "man box" that suppresses vulnerability. What does each film reveal about how society decides what a body is for? How do both groups fight back against those definitions?',
+  readings:'Johnson, "Patriarchy, the System" \u00B7 Lorber, Social Construction of Gender \u00B7 Young, Five Faces of Oppression'
+},
+'crip_camp+oyler':{
+  theme:'The Transformative Space',
+  prompt:'Camp Jened was a "ramshackle" place that changed the world. Oyler was a community learning center trying to be everything for a neighborhood in crisis. How does physical space function in each film? What happens when people who have been excluded finally have a place that was built for them? Why are both spaces so fragile?',
+  readings:'Gorski, Equity Literacy \u00B7 bell hooks, "Homeplace" (via Love, We Want to Do More Than Survive)'
+},
+'crip_camp+precious_knowledge':{
+  theme:'When Education Becomes Liberation',
+  prompt:'The campers at Jened discovered they weren\u2019t alone; the students in Tucson discovered their history had been hidden from them. Both are awakenings. How does each film show the moment when education shifts from passive reception to active liberation? How do both connect to Freire\u2019s idea of "reading the world"?',
+  readings:'Freire, Critical Pedagogy \u00B7 Love, "Developing a Liberatory Consciousness" \u00B7 Harro, Cycle of Liberation'
+},
+'crip_camp+teach_us_all':{
+  theme:'Segregation by Another Name',
+  prompt:'Crip Camp documents how disabled youth were sent to institutions\u2014legally segregated from public life. Teach Us All documents how Black and Brown students are trapped in de facto segregated schools. Both films argue that "inclusion" requires more than physical presence. What structural supports does each film say are necessary for real inclusion?',
+  readings:'Adams et al., Ableism section (Readings for Diversity and Social Justice) \u00B7 McIntosh, White Privilege'
+},
+'mask+oyler':{
+  theme:'Kids Wearing Masks',
+  prompt:'In The Mask You Live In, boys put on a "tough" mask to survive the social hierarchy. In Oyler, a teacher describes students preparing a mask every morning "for how they\u2019re gonna walk to get to school." Both films show young people performing survival. What are they each surviving? What would it take for them to take the mask off?',
+  readings:'Chapman, "Gender Bias in Education" \u00B7 Gorski, "The Myth of the Culture of Poverty" \u00B7 Harro, Cycle of Socialization'
+},
+'mask+precious_knowledge':{
+  theme:'Cultural Scripts and Counter-Scripts',
+  prompt:'The Mask You Live In documents the cultural script boys are handed: dominate, don\u2019t feel, conquer. Precious Knowledge documents the cultural script Latinx students are handed: be invisible, assimilate, don\u2019t question. How do both films show young people being given a "script" they didn\u2019t write? How does each film\u2019s solution\u2014the mask workshop vs. ethnic studies\u2014function as a counter-script?',
+  readings:'Harro, Cycle of Socialization and Cycle of Liberation \u00B7 Gorski, Stages of Multicultural Curriculum'
+},
+'mask+teach_us_all':{
+  theme:'Who Gets to Be a Child?',
+  prompt:'Both films deal with youth being denied the experience of childhood. In The Mask You Live In, boys are told to "be a man" before they\u2019ve had a chance to be a boy. In Teach Us All, students in the Bronx must deal with survival before they can focus on learning. How does adultism\u2014the systemic denial of youth agency\u2014operate differently across these two contexts?',
+  readings:'Bell, "Understanding Adultism" \u00B7 Haberman, "The Pedagogy of Poverty"'
+},
+'oyler+precious_knowledge':{
+  theme:'The School as Contested Territory',
+  prompt:'In both films, the school itself is the battleground. Oyler is fighting the state\u2019s accountability regime; Tucson High is fighting the state\u2019s ban on ethnic studies. How do both films show schools caught between serving students and satisfying political systems? What does each film argue a school should actually be?',
+  readings:'Gorski, Deficit Perspective \u00B7 Freire, Critical Pedagogy \u00B7 Haberman, "The Pedagogy of Poverty"'
+},
+'oyler+teach_us_all':{
+  theme:'Funding, Metrics, and Who Counts',
+  prompt:'Both films expose the gap between what struggling schools actually do and how the system measures them. Oyler provides health clinics and mental health services but is judged on test scores. The Bronx Academy of Letters operates in the poorest congressional district with fewer resources than nearby schools. How do both films illustrate that "equal" funding is not "equitable" funding?',
+  readings:'Gorski, Equity Literacy \u00B7 Haberman, "The Pedagogy of Poverty" \u00B7 Adams et al., Institutional Oppression'
+},
+'precious_knowledge+teach_us_all':{
+  theme:'The Right to See Yourself',
+  prompt:'In Tucson, students flourish when they see their history in the curriculum. In Teach Us All, the Little Rock Nine fought to be physically present in a building. Both are fights for representation\u2014one curricular, one spatial. What does "representation" actually do for a student\u2019s sense of self? Is seeing yourself in a textbook the same kind of victory as walking through a school door?',
+  readings:'Gorski, Stages of Multicultural Curriculum \u00B7 McIntosh, White Privilege \u00B7 Tatum, Social Identity'
+}
+};
+
+// ─── TRIPLE DATA (20) ───
+const TRIPLES = {
+'crip_camp+mask+thirteenth':{
+  prompt:'All three films show people trapped inside an identity imposed by others: "criminal," "cripple," "real man." What is the common mechanism of control? How does each group resist the label, and what does resistance cost them?'
+},
+'crip_camp+oyler+thirteenth':{
+  prompt:'All three films feature institutions (prisons, government agencies, schools) that claim to serve people but actually constrain them. Where does each film locate the moment when the institution fails? Who pays the price?'
+},
+'crip_camp+precious_knowledge+thirteenth':{
+  prompt:'Each film features a major act of collective resistance: Black Lives Matter protests, the 504 sit-in, the student run to Phoenix. What makes collective action possible in each case? What had to happen before people could act together?'
+},
+'crip_camp+teach_us_all+thirteenth':{
+  prompt:'All three films explicitly invoke historical civil rights struggles. 13th invokes slavery and Jim Crow. Crip Camp invokes the broader 1970s rights movements. Teach Us All invokes Little Rock. Why do documentary filmmakers keep returning to history? Is this an effective rhetorical strategy, or does it risk making current injustice feel inevitable?'
+},
+'mask+oyler+thirteenth':{
+  prompt:'These three films show systems destroying people in different registers: physical (incarceration), emotional (the mask), and economic (poverty). Are these three separate problems, or three faces of the same problem? What would a response look like that addressed all three at once?'
+},
+'mask+precious_knowledge+thirteenth':{
+  prompt:'Each film reveals a "script" that the dominant culture writes for a specific group: Black people as criminals, boys as stoic dominators, Latinx students as outsiders. How does each script serve the existing power structure? What happens in each film when people refuse the script?'
+},
+'mask+teach_us_all+thirteenth':{
+  prompt:'All three films argue that media and cultural narratives shape who we become. 13th shows how political rhetoric created the "superpredator." The Mask You Live In shows how media created the "real man." Teach Us All shows how historical erasure created the myth of post-racial progress. How do all three films function as counter-narratives?'
+},
+'oyler+precious_knowledge+thirteenth':{
+  prompt:'Money and policy drive oppression in all three films: private prisons, school funding formulas, legislative bans on ethnic studies. Follow the money in each film. Who profits from the status quo, and who pays?'
+},
+'oyler+teach_us_all+thirteenth':{
+  prompt:'All three films show systems that are "working as designed" to produce unequal outcomes. The Thirteenth Amendment\u2019s loophole. The state\u2019s testing regime. The funding formula that starves certain schools. How does each film challenge the idea that these systems are "broken"? What changes when you reframe them as functioning?'
+},
+'precious_knowledge+teach_us_all+thirteenth':{
+  prompt:'All three films deal with race in America, but from different angles: criminal justice, curriculum, school access. If you could put DuVernay, Palos, and Lowman in a room together, what would they agree on? Where might they disagree about what to do next?'
+},
+'crip_camp+mask+oyler':{
+  prompt:'These three films are the most intimate and personal of the six\u2014less about sweeping historical arguments and more about individual humans navigating daily life. What does each film argue about the relationship between personal pain and systemic oppression? Can a "personal" film make a political argument?'
+},
+'crip_camp+mask+precious_knowledge':{
+  prompt:'All three films show young people discovering that their private suffering is actually shared and systemic. The campers realize disability isn\u2019t a personal failing. Boys realize the "mask" was taught to them. Latinx students realize their disengagement was engineered. What is the moment of awakening in each film, and what makes it possible?'
+},
+'crip_camp+mask+teach_us_all':{
+  prompt:'Each film suggests that being seen\u2014truly witnessed\u2014is the beginning of liberation. Judy Heumann says "I see you, and I believe you." The mask workshop asks boys to show their real face. Teach Us All asks whether the system even sees certain students. What does visibility have to do with justice?'
+},
+'crip_camp+oyler+precious_knowledge':{
+  prompt:'All three films present a community or classroom that functions as a haven from a hostile world: Camp Jened, Oyler\u2019s learning center, the Mexican American Studies classroom. What makes each space work? Are these spaces sustainable, or are they always under threat from the systems around them?'
+},
+'crip_camp+oyler+teach_us_all':{
+  prompt:'Each film shows the gap between what people need and what institutions provide. The disabled need access; they get pity. Oyler families need holistic support; they get test-score mandates. Bronx students need resources; they get "school choice." What is each film\u2019s critique of how institutions respond to marginalized people?'
+},
+'crip_camp+precious_knowledge+teach_us_all':{
+  prompt:'All three films feature young people who are told, in different ways, that they don\u2019t belong. How does each film define "belonging"? Is it the same thing as "inclusion"? What does each film argue must change\u2014people, spaces, laws, or all three?'
+},
+'mask+oyler+precious_knowledge':{
+  prompt:'All three films are fundamentally about education\u2014what it is, who it\u2019s for, and what it could be. The Mask You Live In argues education fails boys emotionally. Oyler argues education fails poor communities structurally. Precious Knowledge argues education fails culturally diverse students intellectually. What would a school look like that addressed all three failures simultaneously?'
+},
+'mask+oyler+teach_us_all':{
+  prompt:'These three films reveal the enormous amount of emotional, physical, and psychological labor students must perform before they can even begin to "learn." What non-academic burdens do the students in each film carry? How do the films challenge the assumption that school is a level playing field?'
+},
+'mask+precious_knowledge+teach_us_all':{
+  prompt:'Each film deals with how dominant culture defines who a young person should be. Boys should be tough. Latinx students should assimilate. Black and Brown students should be grateful for whatever they get. How does each film show young people talking back to these definitions? What forms does resistance take?'
+},
+'oyler+precious_knowledge+teach_us_all':{
+  prompt:'These three films are the most explicitly about schools as political spaces. In each case, the school is where larger societal battles play out: poverty, cultural erasure, segregation. If you were designing a school that honored the lessons of all three films, what would it look like? What would it not do?'
+}
+};
+
+// ─── ALGORITHM ───
+const ALGORITHM = {
+  patterns:[
+    {name:'The Hook',desc:'How do these films begin? Do they open with statistics, or with a person? Think about Ehrmann\u2019s basement, Hockenberry\u2019s neighborhood, the Little Rock mobs, the prison numbers. Why might a filmmaker choose to ground a systemic argument in one person\u2019s pain first? What does that do to you as a viewer?'},
+    {name:'The Cut',desc:'Notice the rhythm of who\u2019s talking. Do the films let one person speak for long, or do they alternate between present-day interviews and archival footage? When you see a scholar make a claim and then immediately see old news footage that seems to confirm it, how does that feel different than just hearing the claim? What work is the archival footage doing?'},
+    {name:'The Score',desc:'When did you notice the music? Hip-hop lyrics in 13th seem to comment directly on the argument. Folk and protest songs in Crip Camp place the disability movement inside a larger counterculture. Emotive ballads in Teach Us All rise during moments of loss. Is the music telling you what to feel before you\u2019ve decided for yourself? Is that a problem?'},
+    {name:'The Antagonist',desc:'At some point, each film seems to narrow its focus from a broad social problem to something more specific\u2014a policy, an organization, a person, a cultural norm. Is there a "villain" in each film, or is it more complicated than that? Think about ALEC, Tom Horne, the state\u2019s accountability model, the "man box." Are these villains, or symptoms? Does the film want you to be angry at a person or at a system?'},
+    {name:'The Climax',desc:'How do these films end? Do they resolve, or do they leave you unsettled? Think about the 504 sit-in, the student run to Phoenix, graduation day at Oyler, the mask workshop. Are these victories? Partial victories? And what does the filmmaker gain by ending on a moment of collective action rather than, say, a statistic about what happened next?'}
+  ],
+  questions:[
+    'Does recognizing these patterns make the films less powerful, or does it help you understand how they\u2019re working on you?',
+    'Is there something manipulative about these techniques? Or is "manipulation" just what we call persuasion once we\u2019ve become conscious of it?',
+    'Did any of the films break the pattern? What was the effect when they did?',
+    'What would a documentary about social justice look like that didn\u2019t follow this structure at all?'
+  ]
+};
+
+// ─── STATE ───
+const filmOrder = ['thirteenth','teach_us_all','precious_knowledge','oyler','mask','crip_camp'];
+let selected = new Set();
+
+// ─── SVG RENDERING ───
+function initGraph(){
+  const svg = document.querySelector('.film-graph');
+  const edgesG = document.getElementById('edges');
+  const nodesG = document.getElementById('nodes');
+
+  // Draw potential edges (all 15 pairs)
+  for(let i=0;i<filmOrder.length;i++){
+    for(let j=i+1;j<filmOrder.length;j++){
+      const a=FILMS[filmOrder[i]], b=FILMS[filmOrder[j]];
+      const key=[filmOrder[i],filmOrder[j]].sort().join('+');
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',a.pos.x);line.setAttribute('y1',a.pos.y);
+      line.setAttribute('x2',b.pos.x);line.setAttribute('y2',b.pos.y);
+      line.setAttribute('data-key',key);
+      line.classList.add('edge');
+      edgesG.appendChild(line);
+    }
+  }
+
+  // Draw nodes
+  filmOrder.forEach(fid=>{
+    const f=FILMS[fid];
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.classList.add('node');
+    g.setAttribute('data-film',fid);
+    g.style.setProperty('--c',f.color);
+
+    // Invisible large tap target
+    const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    bg.setAttribute('cx',f.pos.x);bg.setAttribute('cy',f.pos.y);bg.setAttribute('r',38);
+    bg.classList.add('bg');
+    g.appendChild(bg);
+
+    // Visible circle
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',f.pos.x);c.setAttribute('cy',f.pos.y);c.setAttribute('r',28);
+    c.setAttribute('stroke',f.color);c.classList.add('vis');
+    g.appendChild(c);
+
+    // Label inside circle (short)
+    if(f.svgLabel.length===1){
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',f.pos.x);t.setAttribute('y',f.pos.y+4);
+      t.classList.add('label');t.textContent=f.svgLabel[0];
+      g.appendChild(t);
+    } else {
+      f.svgLabel.forEach((line,i)=>{
+        const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+        t.setAttribute('x',f.pos.x);
+        t.setAttribute('y',f.pos.y - 4 + i*13);
+        t.classList.add('label');
+        t.style.fontSize='9px';
+        t.textContent=line;
+        g.appendChild(t);
+      });
+    }
+
+    g.addEventListener('click',()=>toggleFilm(fid));
+    nodesG.appendChild(g);
+  });
+}
+
+function updateGraph(){
+  // Update nodes
+  document.querySelectorAll('.node').forEach(n=>{
+    n.classList.toggle('selected',selected.has(n.getAttribute('data-film')));
+  });
+  // Update edges
+  document.querySelectorAll('.edge').forEach(e=>{
+    const parts=e.getAttribute('data-key').split('+');
+    e.classList.toggle('active',parts.every(p=>selected.has(p)));
+  });
+}
+
+// ─── INTERACTION ───
+function toggleFilm(fid){
+  if(selected.has(fid)){
+    selected.delete(fid);
+  } else if(selected.size<3){
+    selected.add(fid);
+  }
+  update();
+}
+function clearAll(){
+  selected.clear();
+  update();
+}
+function update(){
+  updateGraph();
+  updateStatus();
+  updatePhase();
+  renderContent();
+}
+
+function updateStatus(){
+  const el=document.getElementById('status');
+  const btn=document.getElementById('clearBtn');
+  if(selected.size===0){
+    el.textContent='Tap the films you watched';
+    btn.classList.remove('show');
+  } else {
+    const names=[...selected].map(id=>FILMS[id].name);
+    el.textContent=names.join(' \u00B7 ');
+    btn.classList.add('show');
+  }
+}
+function updatePhase(){
+  document.getElementById('ph1').classList.toggle('active',selected.size>=1);
+  document.getElementById('ph2').classList.toggle('active',selected.size>=2);
+  document.getElementById('ph3').classList.toggle('active',selected.size>=3);
+}
+
+// ─── CONTENT RENDERING ───
+function renderContent(){
+  const el=document.getElementById('content');
+  const algoEl=document.getElementById('algo');
+
+  if(selected.size===0){
+    el.innerHTML=`
+      <div class="empty">
+        <p>Select one, two, or three films above.</p>
+        <p style="margin-top:.5rem">As you select films, discussion prompts will appear here for each phase of our activity.</p>
+      </div>`;
+    renderAlgorithm(algoEl);
+    return;
+  }
+
+  let html='';
+  const ids=[...selected].sort();
+
+  // ── TRIPLE PROMPT (top, prominent) ──
+  if(ids.length===3){
+    const tKey=ids.join('+');
+    const t=TRIPLES[tKey];
+    if(t){
+      const names=ids.map(id=>FILMS[id].name).join(', ');
+      html+=`<div class="card" style="--accent:#3d5a80;border-left-width:5px">
+        <div class="theme">Your Synthesis Prompt</div>
+        <h3>${names}</h3>
+        <p>${t.prompt}</p>
+      </div>`;
+    }
+
+    // Show the 3 pair prompts
+    html+=`<details open><summary>Your Three Pair Connections</summary><div style="margin-top:.5rem">`;
+    for(let i=0;i<ids.length;i++){
+      for(let j=i+1;j<ids.length;j++){
+        const pKey=[ids[i],ids[j]].sort().join('+');
+        const p=PAIRS[pKey];
+        if(p){
+          html+=`<div class="sub-card">
+            <h4>${FILMS[ids[i]].name} + ${FILMS[ids[j]].name}</h4>
+            <div class="theme" style="margin-bottom:.2rem">${p.theme}</div>
+            <p>${p.prompt}</p>
+            <div class="readings"><h4>Readings</h4><p>${p.readings}</p></div>
+          </div>`;
+        }
+      }
+    }
+    html+=`</div></details>`;
+  }
+
+  // ── PAIR PROMPT (if exactly 2) ──
+  if(ids.length===2){
+    const pKey=ids.join('+');
+    const p=PAIRS[pKey];
+    if(p){
+      html+=`<div class="card" style="--accent:#6b4f8a;border-left-width:5px">
+        <div class="theme">${p.theme}</div>
+        <h3>${FILMS[ids[0]].name} + ${FILMS[ids[1]].name}</h3>
+        <p>${p.prompt}</p>
+        <div class="readings"><h4>Readings that bridge both films</h4><p>${p.readings}</p></div>
+      </div>`;
+    }
+  }
+
+  // ── INDIVIDUAL FILM CARDS ──
+  const detailsOpen = ids.length===1 ? ' open' : '';
+  html+=`<details${detailsOpen}><summary>Film Details & Individual Questions</summary><div style="margin-top:.5rem">`;
+  ids.forEach(fid=>{
+    const f=FILMS[fid];
+    html+=`<div class="card" style="--accent:${f.color}">
+      <h3>${f.name}</h3>
+      <p class="synopsis">${f.synopsis}</p>
+      <blockquote>"${f.quote.text}"<span class="attr">\u2014 ${f.quote.by}</span></blockquote>
+      <ul>${f.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+      <div class="readings"><h4>Connected Readings</h4><p>${f.readings}</p></div>
+    </div>`;
+  });
+  html+=`</div></details>`;
+
+  el.innerHTML=html;
+  renderAlgorithm(algoEl);
+}
+
+function renderAlgorithm(el){
+  el.innerHTML=`
+    <details>
+      <summary style="font-size:1rem">The Documentary Algorithm</summary>
+      <div class="card" style="--accent:#b8a88a;margin-top:.5rem">
+        <p style="margin-bottom:.6rem">These films share a formula. Here are the structural patterns they have in common:</p>
+        <ol>
+          ${ALGORITHM.patterns.map(p=>`<li><strong>${p.name}:</strong> ${p.desc}</li>`).join('')}
+        </ol>
+        <div class="algo-questions">
+          <h4 style="font-size:.8rem;color:#888;text-transform:uppercase;letter-spacing:.03em;margin-bottom:.3rem">Discussion</h4>
+          <ul style="list-style:none;padding:0">
+            ${ALGORITHM.questions.map(q=>`<li style="padding:.35rem 0;border-bottom:1px solid #f0ede6;font-size:.85rem;color:#555">${q}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    </details>`;
+}
+
+// ─── INIT ───
+initGraph();
+update();
+</script>
+</body>
+</html>
